@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 type AnimatedSectionProps = {
   children: React.ReactNode;
   className?: string;
+  id?: string;
 };
 
 export const AnimatedSection = ({
