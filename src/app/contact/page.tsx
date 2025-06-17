@@ -5,6 +5,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { submitContactForm } from "./actions";
 import { ContactInfo } from "@/components/ContactInfo";
+import { Link } from "lucide-react";
 
 const initialState = {
   message: "",
@@ -33,12 +34,12 @@ export default function ContactPage() {
       <div className="min-h-screen flex flex-col items-center justify-center text-center p-8">
         <h1 className="heading text-4xl text-accent mb-4">Thank You!</h1>
         <p className="text-xl text-light/80">{state.message}</p>
-        <a
+        <Link
           href="/"
           className="mt-8 px-5 py-2 border-2 border-light/50 text-light font-bold rounded-lg transition-colors hover:bg-light/10"
         >
           ← Back to Home
-        </a>
+        </Link>
       </div>
     );
   }
@@ -46,12 +47,12 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-2xl">
-        <a
+        <Link
           href="/"
           className="text-light/70 hover:text-light mb-8 inline-block"
         >
           ← Back to Home
-        </a>
+        </Link>
         <h1 className="heading text-5xl md:text-6xl text-center mb-4">
           Let's <span className="text-secondary">Connect</span>
         </h1>

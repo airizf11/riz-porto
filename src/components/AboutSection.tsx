@@ -23,7 +23,7 @@ export const AboutSection = () => {
           <div className="flex justify-center md:justify-end">
             <div className="relative w-60 h-60 md:w-72 md:h-72 rounded-full overflow-hidden border-4 border-secondary/50 shadow-lg">
               <Image
-                src="/images/profile-picture.jpg"
+                src="https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/profile-picture.jpg"
                 alt="Riziyan"
                 layout="fill"
                 objectFit="cover"
