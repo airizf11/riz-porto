@@ -1,0 +1,5 @@
+# src/app/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://akuriziyan.vercel.app/sitemap.xml
