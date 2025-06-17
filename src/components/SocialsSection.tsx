@@ -1,7 +1,7 @@
-// src/components/SocialsSection.tsx
+// File: src/components/SocialsSection.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { AnimatedSection } from "./AnimatedSection";
-import { FaYoutube, FaTiktok, FaInstagram, FaTwitch } from "react-icons/fa";
+import { FaYoutube, FaTiktok, FaInstagram, FaGithub } from "react-icons/fa";
 import {
   Brain,
   Gamepad2,
@@ -12,46 +12,60 @@ import {
 
 const socialLinks = [
   {
-    icon: <Brain />,
+    icon: <FaGithub />,
+    name: "GitHub",
+    desc: "Code, projects, & contributions",
+    color: "text-light",
+    url: "https://github.com/airizf11",
+  },
+  {
+    icon: <FaYoutube />,
     name: "Rizyan Channel",
     desc: "Gadget, tech, & breakdowns",
     color: "text-primary",
+    url: "https://www.youtube.com/rizyanchannel",
   },
   {
-    icon: <Gamepad2 />,
+    icon: <FaYoutube />,
     name: "RizianSG",
     desc: "Gaming & live content",
     color: "text-accent",
+    url: "https://www.youtube.com/@riziansg",
   },
   {
-    icon: <MessageSquareText />,
+    icon: <FaYoutube />,
     name: "Rizian Day",
     desc: "Thoughts & reflections",
     color: "text-tertiary",
+    url: "https://www.youtube.com/@rizianday",
   },
   {
     icon: <FaTiktok />,
     name: "@akuriziyan",
     desc: "Random ideas & creative bits",
     color: "text-light",
+    url: "https://www.tiktok.com/@akuriziyan",
   },
   {
-    icon: <Music />,
+    icon: <FaYoutube />,
     name: "RiFe M Musik",
     desc: "Music & covers",
     color: "text-secondary",
+    url: "https://www.youtube.com/@RiFeMusik",
   },
   {
-    icon: <Clapperboard />,
+    icon: <FaYoutube />,
     name: "Rizian Live",
     desc: "Former game stream archives",
     color: "text-light/60",
+    url: "https://www.youtube.com/@rizianlive",
   },
   {
     icon: <FaInstagram />,
     name: "Instagram",
     desc: "Mix of life",
     color: "text-pink-400",
+    url: "https://instagram.com/rizyan.people",
   },
 ];
 
@@ -65,8 +79,10 @@ export const SocialsSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {socialLinks.map((link, index) => (
             <a
-              href="#"
+              href={link.url}
               key={index}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex items-center gap-4 bg-dark/50 border border-light/10 rounded-xl p-4 transition-all duration-300 hover:border-tertiary/50 hover:bg-dark/20 hover:scale-105"
             >
               <div className={`text-3xl ${link.color}`}>{link.icon}</div>
