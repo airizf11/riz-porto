@@ -1,5 +1,5 @@
 // src/components/ProjectsSection.tsx
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { AnimatedSection } from "./AnimatedSection";
 
 const projects = [
@@ -16,9 +16,9 @@ const projects = [
     name: "atList",
     description:
       "Stream helper can log chats, moderate like a pro, also engage your audience effortlessly.",
-    stack: ["JavaScript", "Platform APIs", "Webhooks"],
+    stack: ["JavaScript", "Node.js", "Twitch API"],
     image: "/images/atlist-preview.png",
-    liveUrl: "https://atlistapp.vercel.app",
+    liveUrl: "https://atlistapp.vercerl.app",
     repoUrl: "#",
   },
 ];
@@ -34,31 +34,28 @@ export const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center"
             >
               <div
-                className={`relative group ${
-                  index % 2 === 1 ? "md:order-last" : ""
-                }`}
+                className={`group ${index % 2 === 1 ? "md:order-last" : ""}`}
               >
-                <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl border-2 border-transparent group-hover:border-accent transition-all duration-300">
                   <Image
                     src={project.image}
                     alt={`Preview of ${project.name}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-dark/30 group-hover:bg-dark/10 transition-colors"></div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 text-center md:text-left">
                 <h3 className="heading text-3xl text-accent">{project.name}</h3>
                 <p className="text-light/80 text-lg leading-relaxed">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-2 my-2">
+                <div className="flex flex-wrap gap-2 my-2 justify-center md:justify-start">
                   {project.stack.map((tech) => (
                     <span
                       key={tech}
@@ -68,7 +65,7 @@ export const ProjectsSection = () => {
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-4 mt-4">
+                <div className="flex items-center gap-4 mt-4 justify-center md:justify-start">
                   <a
                     href={project.liveUrl}
                     target="_blank"
@@ -94,7 +91,7 @@ export const ProjectsSection = () => {
           <button className="text-accent font-bold hover:underline text-lg">
             See All Projects
           </button>
-        </div>
+        </div>{" "}
       </div>
     </AnimatedSection>
   );

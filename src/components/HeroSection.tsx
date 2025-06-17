@@ -39,7 +39,7 @@ export const HeroSection = () => {
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </a>
           <a
-            href="#contact"
+            href="/contact"
             className="group flex items-center justify-center gap-2 px-6 py-3 border-2 border-light/50 text-light font-bold rounded-full transition-colors hover:bg-light/10 active:bg-light/20"
           >
             Contact Me <Mail className="w-5 h-5" />
