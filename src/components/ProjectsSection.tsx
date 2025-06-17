@@ -1,97 +1,140 @@
 // src/components/ProjectsSection.tsx
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 import { AnimatedSection } from "./AnimatedSection";
+import { ExternalLink, Github } from "lucide-react";
 
-const projects = [
-  {
-    name: "ApdetaX",
-    description:
-      "A research companion that aggregates info from multiple sources, ideal for content creators, educators, and students.",
-    stack: ["React", "Next.js", "Supabase", "OpenRouter API"],
-    image: "/images/apdetax-preview.png",
-    liveUrl: "https://apdetax.vercel.app",
-    repoUrl: "#",
-  },
-  {
-    name: "atList",
-    description:
-      "Stream helper can log chats, moderate like a pro, also engage your audience effortlessly.",
-    stack: ["JavaScript", "Node.js", "Twitch API"],
-    image: "/images/atlist-preview.png",
-    liveUrl: "https://atlistapp.vercerl.app",
-    repoUrl: "#",
-  },
-];
+type ProjectFromDB = {
+  id: number;
+  name: string;
+  description: string;
+  stack: string | null;
+  image_url: string | null;
+  live_url: string | null;
+  repo_url: string | null;
+  is_featured: boolean;
+};
 
-export const ProjectsSection = () => {
+export const ProjectsSection = async () => {
+  const { data: projectsFromDB, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("is_featured", true)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching projects:", error.message);
+    return (
+      <section id="projects" className="w-full py-20 md:py-32 bg-dark">
+        <div className="container mx-auto px-8 text-center">
+          <p className="text-red-400">Error: Could not load projects data.</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!projectsFromDB || projectsFromDB.length === 0) {
+    return (
+      <section id="projects" className="w-full py-20 md:py-32 bg-dark">
+        <div className="container mx-auto px-8 text-center">
+          <p className="text-light/70">
+            No featured projects to display at the moment.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <AnimatedSection id="projects" className="w-full py-20 md:py-32 bg-dark">
       <div className="container mx-auto max-w-6xl px-8">
         <h2 className="heading text-4xl md:text-5xl text-center mb-16">
           Featured <span className="text-primary">Projects</span>
         </h2>
-        <div className="flex flex-col gap-16 md:gap-24">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center"
-            >
-              <div
-                className={`group ${index % 2 === 1 ? "md:order-last" : ""}`}
-              >
-                <div className="relative aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl border-2 border-transparent group-hover:border-accent transition-all duration-300">
-                  <Image
-                    src={project.image}
-                    alt={`Preview of ${project.name}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-dark/30 group-hover:bg-dark/10 transition-colors"></div>
-                </div>
-              </div>
 
-              <div className="flex flex-col gap-4 text-center md:text-left">
-                <h3 className="heading text-3xl text-accent">{project.name}</h3>
-                <p className="text-light/80 text-lg leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 my-2 justify-center md:justify-start">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-sm bg-secondary/50 text-light px-3 py-1 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+        <div className="flex flex-col gap-16 md:gap-24">
+          {projectsFromDB.map((project: ProjectFromDB, index) => {
+            const stackArray = project.stack
+              ? project.stack.split(",").map((s) => s.trim())
+              : [];
+
+            return (
+              <div
+                key={project.id}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center"
+              >
+                <div
+                  className={`group ${index % 2 === 1 ? "md:order-last" : ""}`}
+                >
+                  <a
+                    href={project.live_url || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <div className="relative aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl border-2 border-light/10 group-hover:border-accent transition-all duration-300">
+                      {project.image_url && (
+                        <Image
+                          src={project.image_url}
+                          alt={`Preview of ${project.name}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-dark/40 group-hover:bg-dark/10 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <ExternalLink className="w-10 h-10 text-light" />
+                      </div>
+                    </div>
+                  </a>
                 </div>
-                <div className="flex items-center gap-4 mt-4 justify-center md:justify-start">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2 bg-primary text-dark font-bold rounded-lg transition-transform hover:scale-105 active:scale-95"
-                  >
-                    Live Demo
-                  </a>
-                  <a
-                    href={project.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2 border-2 border-light/50 text-light font-bold rounded-lg transition-colors hover:bg-light/10 active:bg-light/20"
-                  >
-                    Source Code
-                  </a>
+
+                <div className="flex flex-col gap-4 text-center md:text-left">
+                  <h3 className="heading text-3xl text-accent">
+                    {project.name}
+                  </h3>
+                  <p className="text-light/80 text-lg leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 my-2 justify-center md:justify-start">
+                    {stackArray.map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-sm bg-secondary/50 text-light px-3 py-1 rounded-full"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-4 mt-4 justify-center md:justify-start">
+                    {project.live_url && (
+                      <a
+                        href={project.live_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-dark font-bold rounded-lg transition-transform hover:scale-105 active:scale-95"
+                      >
+                        <ExternalLink className="w-4 h-4" /> Live Demo
+                      </a>
+                    )}
+                    {project.repo_url && (
+                      <a
+                        href={project.repo_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-5 py-2 border-2 border-light/50 text-light font-bold rounded-lg transition-colors hover:bg-light/10 active:bg-light/20"
+                      >
+                        <Github className="w-4 h-4" /> Source
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-        <div className="text-center mt-16">
-          <button className="text-accent font-bold hover:underline text-lg">
-            See All Projects
-          </button>
-        </div>{" "}
       </div>
     </AnimatedSection>
   );

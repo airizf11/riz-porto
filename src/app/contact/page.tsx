@@ -4,6 +4,7 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import { submitContactForm } from "./actions";
+import { ContactInfo } from "@/components/ContactInfo";
 
 const initialState = {
   message: "",
@@ -58,7 +59,6 @@ export default function ContactPage() {
           Have a project in mind or just want to say hi? Fill out the form
           below.
         </p>
-
         <form action={formAction} className="flex flex-col gap-6">
           <div>
             <label htmlFor="name" className="sr-only">
@@ -116,6 +116,7 @@ export default function ContactPage() {
             <p className="text-red-400 text-sm text-center">{state.message}</p>
           )}
         </form>
+        <ContactInfo />
       </div>
     </div>
   );

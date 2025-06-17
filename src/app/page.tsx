@@ -5,18 +5,20 @@ import { ProjectsSection } from "@/components/ProjectsSection";
 import { SocialsSection } from "@/components/SocialsSection";
 import { QuoteSection } from "@/components/QuoteSection";
 import { Footer } from "@/components/Footer";
-import { SectionSeparator } from "@/components/SectionSeparator"; // <-- Import
+import { HomeContactSection } from "@/components/HomeContactSection";
+import { Divider } from "@/components/Divider";
 
 export default function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center">
       <HeroSection />
       <AboutSection />
-      <SectionSeparator color="accent" />
+      <Divider />
       <ProjectsSection />
-      <SectionSeparator color="tertiary" />
+      <Divider />
       <SocialsSection />
       <QuoteSection />
+      <HomeContactSection />
       <Footer />
     </main>
   );
