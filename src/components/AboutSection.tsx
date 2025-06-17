@@ -1,5 +1,5 @@
 // src/components/AboutSection.tsx
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { AnimatedSection } from "./AnimatedSection";
 
 export const AboutSection = () => {
