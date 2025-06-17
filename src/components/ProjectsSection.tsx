@@ -72,7 +72,7 @@ export const ProjectsSection = async () => {
                     rel="noopener noreferrer"
                     className="block"
                   >
-                    <div className="relative aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-2xl border-2 border-light/10 group-hover:border-accent transition-all duration-300">
+                    <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-light/10 group-hover:border-accent transition-all duration-300">
                       {project.image_url && (
                         <Image
                           src={project.image_url}
@@ -90,13 +90,13 @@ export const ProjectsSection = async () => {
                 </div>
 
                 <div className="flex flex-col gap-4 text-center md:text-left">
+                  {" "}
                   <h3 className="heading text-3xl text-accent">
                     {project.name}
                   </h3>
                   <p className="text-light/80 text-lg leading-relaxed">
                     {project.description}
                   </p>
-
                   <div className="flex flex-wrap gap-2 my-2 justify-center md:justify-start">
                     {stackArray.map((tech) => (
                       <span
@@ -107,7 +107,6 @@ export const ProjectsSection = async () => {
                       </span>
                     ))}
                   </div>
-
                   <div className="flex items-center gap-4 mt-4 justify-center md:justify-start">
                     {project.live_url && (
                       <a

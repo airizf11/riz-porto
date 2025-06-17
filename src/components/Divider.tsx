@@ -12,7 +12,7 @@ export const Divider = () => {
         viewport={{ once: true, amount: 0.8 }}
         transition={{ duration: 1.2, ease: [0.6, 0.01, -0.05, 0.95] }}
         style={{ transformOrigin: "center" }}
-        className="h-px w-full my-16 md:my-24 bg-gradient-to-r from-transparent via-accent to-transparent"
+        className="h-0.5 w-full my-16 md:my-24 bg-gradient-to-r from-transparent via-[rgb(var(--color-accent))] to-transparent"
       />
     </div>
   );

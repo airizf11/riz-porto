@@ -5,7 +5,7 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { submitContactForm } from "./actions";
 import { ContactInfo } from "@/components/ContactInfo";
-import { Link } from "lucide-react";
+import Link from "next/link";
 
 const initialState = {
   message: "",
