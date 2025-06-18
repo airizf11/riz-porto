@@ -1,4 +1,5 @@
-// src/components/SocialsSection.tsx
+// src/components/SocialsSection.tsx (LENGKAP & DIDISAIN ULANG)
+import Image from "next/image";
 import { AnimatedSection } from "./AnimatedSection";
 import { socialGroups } from "@/lib/data";
 
@@ -17,7 +18,7 @@ export const SocialsSection = () => {
               >
                 {group.category}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {group.links.map((link) => {
                   const Icon = link.icon;
                   return (
@@ -26,14 +27,30 @@ export const SocialsSection = () => {
                       key={link.name}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-4 bg-dark/50 border border-light/10 rounded-xl p-4 transition-all duration-300 hover:border-tertiary/50 hover:bg-dark/20 hover:scale-105"
+                      className="block group"
                     >
-                      <div className={`text-3xl ${group.color}`}>
-                        <Icon />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-light">{link.name}</h4>
-                        <p className="text-sm text-light/70">{link.desc}</p>
+                      <div className="relative aspect-video w-full overflow-hidden rounded-xl shadow-lg transform transition-transform duration-300 ease-in-out group-hover:scale-105">
+                        {link.imageUrl && (
+                          <Image
+                            src={link.imageUrl}
+                            alt={`Cover image for ${link.name}`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                        )}
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-all duration-300 group-hover:from-black/70"></div>
+
+                        <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                          <div className="flex items-center gap-3 mb-2">
+                            <Icon className={`text-3xl ${group.color}`} />
+                            <h4 className="font-bold text-2xl tracking-tight text-light">
+                              {link.name}
+                            </h4>
+                          </div>
+                          <p className="text-sm text-light/80">{link.desc}</p>
+                        </div>
                       </div>
                     </a>
                   );

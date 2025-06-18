@@ -12,30 +12,39 @@ export const socialGroups = [
         name: "Rizyan Channel",
         desc: "Gadget, tech, & breakdowns",
         url: "https://www.youtube.com/rizyanchannel",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizyanch01.jpg",
       },
       {
         icon: FaYoutube,
         name: "RizianSG",
         desc: "Gaming & live content",
         url: "https://www.youtube.com/@riziansg",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/riziansg01.jpg",
       },
       {
         icon: FaYoutube,
         name: "Rizian Day",
         desc: "Thoughts & reflections",
         url: "https://www.youtube.com/@rizianday",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizianday01.jpg",
       },
       {
         icon: FaYoutube,
-        name: "Rife M Musik",
+        name: "RiFe M Musik",
         desc: "Music & covers",
         url: "https://www.youtube.com/@rifemusik",
+        imageUrl: "https://placehold.co/600x400/9b59b6/ffffff?text=Gaming",
       },
       {
         icon: FaYoutube,
         name: "Rizian Live",
         desc: "Former game stream archives",
         url: "https://www.youtube.com/@rizianlive",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizianlive01.jpg",
       },
     ],
   },
@@ -49,6 +58,8 @@ export const socialGroups = [
         name: "GitHub",
         desc: "My code & projects",
         url: "https://github.com/airizf11",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/airizf1101.jpg",
       },
     ],
   },
@@ -62,12 +73,16 @@ export const socialGroups = [
         name: "Instagram",
         desc: "Mix of life",
         url: "https://instagram.com/rizyan.people",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizyan.people01.jpg",
       },
       {
         icon: FaTiktok,
         name: "@akuriziyan",
         desc: "Random ideas & creative bits",
         url: "https://www.tiktok.com/@akuriziyan",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/akuriziyan-tt01.jpg",
       },
     ],
   },
