@@ -5,6 +5,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { marked } from "marked";
+
+interface ProjectPageProps {
+  params?: Promise<{
+    slug: string;
+  }>;
+}
 
 type Project = {
   name: string;
@@ -13,28 +20,37 @@ type Project = {
   image_url: string | null;
   live_url: string | null;
   repo_url: string | null;
+  case_study: string | null;
 };
 
 async function getProject(slug: string): Promise<Project | null> {
   const { data, error } = await supabase
     .from("projects")
-    .select("name, description, stack, image_url, live_url, repo_url")
+    .select(
+      "name, description, stack, image_url, live_url, repo_url, case_study"
+    )
     .eq("slug", slug)
     .single();
 
   if (error || !data) {
     return null;
   }
-
   return data;
 }
 
 export async function generateMetadata({
   params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const project = await getProject(params.slug);
+}: ProjectPageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const slug = resolvedParams?.slug;
+
+  if (!slug) {
+    return {
+      title: "Project Not Found",
+    };
+  }
+
+  const project = await getProject(slug);
 
   if (!project) {
     return {
@@ -48,12 +64,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const project = await getProject(params.slug);
+export default async function ProjectDetailPage({ params }: ProjectPageProps) {
+  const resolvedParams = await params;
+  const slug = resolvedParams?.slug;
+
+  if (!slug) {
+    notFound();
+  }
+
+  const project = await getProject(slug);
 
   if (!project) {
     notFound();
@@ -63,8 +82,30 @@ export default async function ProjectDetailPage({
     ? project.stack.split(",").map((s) => s.trim())
     : [];
 
+  const caseStudyHtml = project.case_study
+    ? await marked.parse(project.case_study)
+    : "<p>Detail studi kasus untuk proyek ini akan segera ditambahkan.</p>";
+
+  const ProjectSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.name,
+    applicationCategory: "DeveloperApplication",
+    author: {
+      "@type": "Person",
+      name: "Riziyan",
+      url: "https://akuriziyan.vercel.app",
+    },
+    description: project.description,
+  };
+
   return (
     <main className="min-h-screen bg-dark text-light">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ProjectSchema) }}
+      />
+
       <div className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
         <Link
           href="/#projects"
@@ -100,23 +141,10 @@ export default async function ProjectDetailPage({
             <h2 className="heading text-2xl text-secondary mb-4">
               About This Project
             </h2>
-            <div className="prose prose-invert prose-lg text-light/90">
-              <p>
-                Ini adalah bagian di mana kamu bercerita. Jelaskan masalah apa
-                yang ingin diselesaikan oleh proyek ini. Apa tantangan teknis
-                yang kamu hadapi?
-              </p>
-              <p>
-                Bagaimana kamu merancang solusinya? Apakah ada hal spesifik yang
-                kamu pelajari saat membangun proyek ini? Ini adalah kesempatan
-                untuk menunjukkan proses berpikirmu.
-              </p>
-              <ul>
-                <li>Fitur kunci 1</li>
-                <li>Fitur kunci 2</li>
-                <li>Fitur kunci 3</li>
-              </ul>
-            </div>
+            <div
+              className="prose prose-invert prose-lg text-light/90"
+              dangerouslySetInnerHTML={{ __html: caseStudyHtml }}
+            ></div>
           </div>
 
           <div className="flex flex-col gap-4">
