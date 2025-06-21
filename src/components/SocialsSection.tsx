@@ -1,4 +1,4 @@
-// src/components/SocialsSection.tsx (LENGKAP & DIDISAIN ULANG)
+// src/components/SocialsSection.tsx
 import Image from "next/image";
 import { AnimatedSection } from "./AnimatedSection";
 import { socialGroups } from "@/lib/data";
@@ -44,7 +44,9 @@ export const SocialsSection = () => {
 
                         <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
                           <div className="flex items-center gap-3 mb-2">
-                            <Icon className={`text-3xl ${group.color}`} />
+                            {Icon && (
+                              <Icon className={`text-3xl ${group.color}`} />
+                            )}
                             <h4 className="font-bold text-2xl tracking-tight text-light">
                               {link.name}
                             </h4>

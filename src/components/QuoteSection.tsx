@@ -1,4 +1,4 @@
-// src/components/QuoteSection.tsx (Sudah Diupdate)
+// src/components/QuoteSection.tsx
 /* eslint-disable react/no-unescaped-entities */
 import { AnimatedSection } from "./AnimatedSection";
 import { supabase } from "@/lib/supabase";

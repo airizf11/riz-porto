@@ -1,0 +1,78 @@
+// src/lib/data.ts
+import { supabase } from "@/lib/supabase";
+import { cache } from "react";
+import {
+  FaYoutube,
+  FaTiktok,
+  FaInstagram,
+  FaGithub,
+  FaLinkedin,
+} from "react-icons/fa";
+
+export const iconMap = {
+  FaYoutube,
+  FaTiktok,
+  FaInstagram,
+  FaGithub,
+  FaLinkedin,
+};
+
+export const getAboutData = cache(async () => {
+  const { data, error } = await supabase
+    .from("about_data")
+    .select("key, value");
+  if (error) {
+    console.error("Error fetching about data:", error);
+    return {
+      headline: {
+        part1: "Driven by",
+        highlight1: "curiosity",
+        part2: "built by",
+        highlight2: "collaboration",
+        part3: ".",
+      },
+      narrative: "Error loading dynamic content. Please check the connection.",
+    };
+  }
+
+  const aboutObject = data.reduce((obj, item) => {
+    obj[item.key] = item.value;
+    return obj;
+  }, {} as Record<string, string>);
+
+  return {
+    headline: {
+      part1: aboutObject.headline_part1 || "",
+      highlight1: aboutObject.headline_highlight1 || "",
+      part2: aboutObject.headline_part2 || "",
+      highlight2: aboutObject.headline_highlight2 || "",
+      part3: aboutObject.headline_part3 || "",
+    },
+    narrative: aboutObject.narrative || "",
+  };
+});
+
+export const getSocialGroups = cache(async () => {
+  const { data, error } = await supabase
+    .from("social_groups")
+    .select(
+      `
+            *,
+            social_links (
+                *
+            )
+        `
+    )
+    .order("order_index", { ascending: true })
+    .order("id", { foreignTable: "social_links", ascending: true });
+
+  if (error) {
+    console.error("Error fetching social groups:", error.message);
+    return [];
+  }
+
+  return data.map((group) => ({
+    ...group,
+    links: group.social_links,
+  }));
+});

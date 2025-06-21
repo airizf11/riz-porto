@@ -1,41 +1,17 @@
 // src/app/projects/[slug]/page.tsx
-import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { marked } from "marked";
+import { constructMetadata } from "@/lib/metadata";
+import { getProjectBySlug } from "@/lib/data";
 
 interface ProjectPageProps {
   params?: Promise<{
     slug: string;
   }>;
-}
-
-type Project = {
-  name: string;
-  description: string;
-  stack: string | null;
-  image_url: string | null;
-  live_url: string | null;
-  repo_url: string | null;
-  case_study: string | null;
-};
-
-async function getProject(slug: string): Promise<Project | null> {
-  const { data, error } = await supabase
-    .from("projects")
-    .select(
-      "name, description, stack, image_url, live_url, repo_url, case_study"
-    )
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-  return data;
 }
 
 export async function generateMetadata({
@@ -45,23 +21,20 @@ export async function generateMetadata({
   const slug = resolvedParams?.slug;
 
   if (!slug) {
-    return {
-      title: "Project Not Found",
-    };
+    return constructMetadata({ title: "Project Not Found" });
   }
 
-  const project = await getProject(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
-    return {
-      title: "Project Not Found",
-    };
+    return constructMetadata({ title: "Project Not Found" });
   }
 
-  return {
-    title: `${project.name} | Riziyan's Portfolio`,
+  return constructMetadata({
+    title: project.name,
     description: project.description,
-  };
+    image: project.image_url || undefined,
+  });
 }
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
@@ -72,7 +45,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     notFound();
   }
 
-  const project = await getProject(slug);
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();

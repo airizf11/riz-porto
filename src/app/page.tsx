@@ -23,7 +23,13 @@ export default function HomePage() {
       <Divider />
       <SocialsSection />
       <Divider />
-      <QuoteSection />
+      <Suspense
+        fallback={
+          <div className="h-24 w-full text-center">Loading a quote...</div>
+        }
+      >
+        <QuoteSection />
+      </Suspense>
       <Divider />
       <HomeContactSection />
       <Footer />

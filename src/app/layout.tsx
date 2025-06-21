@@ -4,7 +4,7 @@ import { Inter, Lora } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { aboutData } from "@/lib/data";
+import { constructMetadata } from "@/lib/metadata";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,26 +18,7 @@ const lora = Lora({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Riziyan - Digital Explorer & Creator",
-  description:
-    "I build and share things for the curious mind. A personal portfolio for tech, education, and content creation.",
-  openGraph: {
-    title: "Riziyan - Digital Explorer & Creator",
-    description: aboutData.narrative.replace(/<[^>]*>?/gm, ""),
-    url: "https://akuriziyan.vercel.app",
-    siteName: "Riziyan Portfolio",
-    images: [
-      {
-        url: "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/profile-picture.jpg", // URL gambar profilmu
-        width: 800,
-        height: 600,
-      },
-    ],
-    locale: "id_ID",
-    type: "website",
-  },
-};
+export const metadata: Metadata = constructMetadata();
 
 const PersonSchema = {
   "@context": "https://schema.org",
@@ -59,11 +40,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable}`}>
-      <body>
+      <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(PersonSchema) }}
         />
+      </head>
+      <body>
         {children}
         <Analytics />
         <SpeedInsights />
