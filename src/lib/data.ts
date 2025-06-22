@@ -10,13 +10,19 @@ import {
 } from "react-icons/fa";
 
 type Project = {
-  name: string;
-  description: string;
-  stack: string | null;
-  image_url: string | null;
-  live_url: string | null;
-  repo_url: string | null;
   case_study: string | null;
+  created_at: string;
+  description: string;
+  id: string;
+  image_url: string | null;
+  is_featured: boolean;
+  live_url: string | null;
+  name: string;
+  order_index: number | null;
+  repo_url: string | null;
+  slug: string | null;
+  stack: string | null;
+  updated_at: string | null;
 };
 
 export const getProjectBySlug = cache(
@@ -25,9 +31,7 @@ export const getProjectBySlug = cache(
 
     const { data, error } = await supabase
       .from("projects")
-      .select(
-        "name, description, stack, image_url, live_url, repo_url, case_study"
-      )
+      .select("*")
       .eq("slug", slug)
       .single();
 
