@@ -5,16 +5,15 @@ import { ArrowRight, Mail } from "lucide-react";
 
 export const HeroSection = () => {
   return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-dark text-light p-8">
-      <div className="text-center max-w-3xl">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="heading text-5xl md:text-7xl lg:text-8xl mb-4"
-        >
-          Hi, I’m Riziyan. I build and share things for the{" "}
-          <span className="text-primary">curious</span> mind.
+    <section className="w-full h-screen flex items-center justify-center bg-dark text-light p-8">
+      <div className="text-center max-w-3xl pt-32">
+        <motion.h1 className="heading text-5xl md:text-7xl lg:text-8xl mb-4">
+          <span className="block">Hi, I’m Riziyan.</span>
+          <br />
+          <span className="block">I build and share things</span>
+          <span className="block">
+            for the <span className="text-primary">curious</span> mind.
+          </span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

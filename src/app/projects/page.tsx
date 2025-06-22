@@ -16,7 +16,7 @@ async function getAllProjects() {
   const { data, error } = await supabase
     .from("projects")
     .select("slug, name, description, stack, image_url, live_url, repo_url")
-    .order("created_at", { ascending: false });
+    .order("order_index", { ascending: true, nullsFirst: false });
 
   if (error) {
     console.error("Error fetching all projects:", error.message);

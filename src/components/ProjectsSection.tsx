@@ -2,7 +2,6 @@
 import { supabase } from "@/lib/supabase";
 import { AnimatedSection } from "./AnimatedSection";
 import { ProjectCard } from "./ProjectCard";
-// import { LayoutGrid, Link } from "lucide-react";
 
 export const ProjectsSection = async () => {
   const { data: projectsFromDB, error } = await supabase
@@ -48,20 +47,10 @@ export const ProjectsSection = async () => {
             <ProjectCard
               key={project.slug}
               project={project}
-              // Terapkan layout zig-zag
               orientation={index % 2 === 1 ? "right" : "left"}
             />
           ))}
         </div>
-        {/* <div className="mt-20 text-center">
-          <Link
-            href="/projects"
-            className="group inline-flex items-center justify-center gap-3 px-8 py-4 border-2 border-secondary/50 text-secondary font-bold rounded-full transition-all duration-300 hover:bg-secondary/20 hover:border-secondary hover:scale-105 active:scale-95"
-          >
-            <LayoutGrid className="w-5 h-5 transition-transform group-hover:rotate-6" />
-            <span>View All Projects</span>
-          </Link>
-        </div> */}
       </div>
     </AnimatedSection>
   );

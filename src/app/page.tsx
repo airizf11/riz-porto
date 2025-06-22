@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { HomeContactSection } from "@/components/HomeContactSection";
 import { Divider } from "@/components/Divider";
 import { ProjectsSkeleton } from "@/components/ProjectsSkeleton";
+import { QuoteSkeleton } from "@/components/QuoteSkeleton";
 
 export default function HomePage() {
   return (
@@ -23,11 +24,7 @@ export default function HomePage() {
       <Divider />
       <SocialsSection />
       <Divider />
-      <Suspense
-        fallback={
-          <div className="h-24 w-full text-center">Loading a quote...</div>
-        }
-      >
+      <Suspense fallback={<QuoteSkeleton />}>
         <QuoteSection />
       </Suspense>
       <Divider />
