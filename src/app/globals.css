@@ -1,5 +1,6 @@
 /* src/app/globals.css */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --color-primary: 221 28 26;
@@ -52,4 +53,43 @@ body {
 
 .prose p {
   margin-bottom: 1.25em;
+}
+
+/*  */
+
+.prose.prose-invert {
+  --tw-prose-body: rgb(var(--color-light) / 0.85);
+  --tw-prose-headings: rgb(var(--color-light));
+  --tw-prose-bold: rgb(var(--color-light));
+  --tw-prose-captions: rgb(var(--color-light) / 0.7);
+
+  --tw-prose-links: rgb(var(--color-accent));
+  --tw-prose-quotes: rgb(var(--color-accent));
+  --tw-prose-code: rgb(var(--color-accent));
+
+  --tw-prose-quote-borders: rgb(var(--color-secondary));
+  --tw-prose-bullets: rgb(var(--color-secondary));
+  --tw-prose-hr: rgb(var(--color-light) / 0.2);
+  
+  --tw-prose-th-borders: rgb(var(--color-light) / 0.3);
+  --tw-prose-td-borders: rgb(var(--color-light) / 0.2);
+
+  --tw-prose-links-hover: rgb(var(--color-accent) / 0.8);
+}
+
+.prose.prose-invert pre {
+  background-color: rgb(20 20 20 / 0.7);
+  border: 1px solid rgb(var(--color-light) / 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.prose.prose-invert code {
+  background-color: rgb(var(--color-accent) / 0.1);
+  padding: 0.15em 0.3em;
+  border-radius: 0.3em;
+}
+
+.prose.prose-invert code::before,
+.prose.prose-invert code::after {
+  content: none;
 }
