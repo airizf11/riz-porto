@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { constructMetadata } from "@/lib/metadata";
+import { Header } from "@/components/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,7 +47,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(PersonSchema) }}
         />
       </head>
-      <body>
+      <body className="pt-20">
+        <Header />
         {children}
         <Analytics />
         <SpeedInsights />

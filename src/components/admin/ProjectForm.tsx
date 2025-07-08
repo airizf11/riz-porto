@@ -1,4 +1,4 @@
-// src/components/ProjectForm.tsx
+// src/components/admin/ProjectForm.tsx
 "use client";
 
 import { useActionState, useState, useMemo } from "react";
@@ -45,31 +45,26 @@ export function ProjectForm({ project }: { project?: Project | null }) {
   );
   const isEditing = !!project;
 
-  // State khusus untuk mengelola konten dari editor Markdown
   const [caseStudyContent, setCaseStudyContent] = useState(
     project?.case_study ?? ""
   );
 
-  // Handler untuk mengupdate state saat konten editor berubah
   const handleCaseStudyChange = (value: string) => {
     setCaseStudyContent(value);
   };
 
-  // Memoize opsi untuk SimpleMDE agar tidak dibuat ulang di setiap render
   const mdeOptions = useMemo(() => {
     return {
       spellChecker: false,
       minHeight: "300px",
-      // Kamu bisa tambah opsi lain di sini jika perlu, cek dokumentasi EasyMDE
+      // bisa add more opsi here
     };
   }, []);
 
   return (
     <form action={formAction} className="space-y-8">
-      {/* Input tersembunyi untuk ID, hanya ada saat mode edit */}
       {project && <input type="hidden" name="id" value={project.id} />}
 
-      {/* Grid Layout untuk Form Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
@@ -137,14 +132,12 @@ export function ProjectForm({ project }: { project?: Project | null }) {
         >
           Case Study (Markdown)
         </label>
-        {/* Editor Markdown sebagai controlled component */}
         <SimpleMDE
           id="case_study_editor"
           value={caseStudyContent}
           onChange={handleCaseStudyChange}
           options={mdeOptions}
         />
-        {/* Textarea ini tersembunyi, tapi nilainya akan dikirim bersama form */}
         <textarea
           name="case_study"
           value={caseStudyContent}

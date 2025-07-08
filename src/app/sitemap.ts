@@ -2,31 +2,41 @@
 import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
 
-const BASE_URL = "https://akuriziyan.vercel.app";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://akuriziyan.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = [
-    "/",
-    "/contact",
-    "/projects",
-    // jika nanti ada '/blog' dll
-  ].map((route) => ({
+  const staticRoutes = ["/", "/contact", "/projects"].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: route === "/" ? 1.0 : 0.8,
   }));
 
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("slug, created_at");
+  try {
+    console.log("Fetching projects for sitemap...");
+    const { data: projects, error } = await supabase
+      .from("projects")
+      .select("slug, updated_at");
 
-  const projectRoutes = projects
-    ? projects.map((project) => ({
-        url: `${BASE_URL}/projects/${project.slug}`,
-        lastModified: new Date(project.created_at),
-      }))
-    : [];
+    if (error) {
+      throw new Error(`Supabase error fetching projects: ${error.message}`);
+    }
 
-  // Nanti bisa tambah fetch untuk blog posts di sini
+    const projectRoutes = projects
+      ? projects.map((project) => ({
+          url: `${BASE_URL}/projects/${project.slug}`,
+          lastModified: new Date(project.updated_at || new Date()),
+          changeFrequency: "weekly" as const,
+        }))
+      : [];
 
-  return [...staticRoutes, ...projectRoutes];
+    console.log(
+      `Sitemap generated with ${staticRoutes.length} static and ${projectRoutes.length} project routes.`
+    );
+    return [...staticRoutes, ...projectRoutes];
+  } catch (error) {
+    console.error("Failed to generate dynamic sitemap routes:", error);
+    return staticRoutes;
+  }
 }
