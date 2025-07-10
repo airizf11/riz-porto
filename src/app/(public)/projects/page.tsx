@@ -1,4 +1,4 @@
-// src/app/projects/page.tsx
+// src/app/(public)/projects/page.tsx
 /* eslint-disable react/no-unescaped-entities */
 import { supabase } from "@/lib/supabase";
 import { ProjectCard } from "@/components/ProjectCard";

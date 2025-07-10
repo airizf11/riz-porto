@@ -6,7 +6,7 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://akuriziyan.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["/", "/contact", "/projects"].map((route) => ({
+  const staticRoutes = ["/", "/contact", "/tags", "/projects"].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,

@@ -1,4 +1,4 @@
-// src/app/bitcoin/page.tsx
+// src/app/(public)/bitcoin/page.tsx
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

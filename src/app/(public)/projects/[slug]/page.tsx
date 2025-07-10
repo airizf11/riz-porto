@@ -1,4 +1,4 @@
-// src/app/projects/[slug]/page.tsx
+// src/app/(public)/projects/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { constructMetadata } from "@/lib/metadata";

@@ -1,4 +1,4 @@
-// src/app/contact/page.tsx
+// src/app/(public)/contact/page.tsx
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 

@@ -1,82 +1,142 @@
 // src/app/(admin)/mudir/page.tsx
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { Edit, PlusCircle } from "lucide-react";
-import { DeleteProjectButton } from "@/components/admin/DeleteProjectButton";
+import {
+  ArrowUpRight,
+  GitMerge,
+  MessageSquare,
+  PenSquare,
+  Quote,
+} from "lucide-react";
+import React from "react";
 
-async function getProjects() {
+function StatCard({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: number;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="bg-dark p-6 rounded-lg border border-light/10">
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-secondary/30 rounded-lg">{icon}</div>
+        <div>
+          <p className="text-light/70">{title}</p>
+          <p className="text-3xl font-bold">{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function getDashboardStats() {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("projects")
-    .select("id, slug, name, created_at, is_featured")
-    .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching projects for admin:", error);
-    return [];
-  }
-  return data;
+  const [
+    { count: projectCount },
+    { count: articleCount },
+    { count: quoteCount },
+    { data: recentItems },
+  ] = await Promise.all([
+    supabase
+      .from("content_items")
+      .select("*", { count: "exact", head: true })
+      .eq("content_type", "project"),
+    supabase
+      .from("content_items")
+      .select("*", { count: "exact", head: true })
+      .eq("content_type", "article")
+      .eq("status", "published"),
+    supabase
+      .from("content_items")
+      .select("*", { count: "exact", head: true })
+      .eq("content_type", "quote")
+      .eq("status", "published"),
+    supabase
+      .from("content_items")
+      .select("id, title, updated_at, content_type")
+      .order("updated_at", { ascending: false, nullsFirst: false })
+      .limit(5),
+  ]);
+
+  return {
+    projectCount: projectCount ?? 0,
+    articleCount: articleCount ?? 0,
+    quoteCount: quoteCount ?? 0,
+    recentItems: recentItems ?? [],
+  };
 }
 
 export default async function MudirDashboard() {
-  const projects = await getProjects();
+  const { projectCount, articleCount, quoteCount, recentItems } =
+    await getDashboardStats();
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold">Projects</h2>
-        <Link
-          href="/mudir/projects/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-dark font-bold rounded-lg transition-transform hover:scale-105"
-        >
-          <PlusCircle className="w-5 h-5" />
-          Add New Project
-        </Link>
+    <div className="space-y-12">
+      <div>
+        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <p className="text-light/60 mt-2">
+          Welcome back! Here's a quick overview of your personal platform.
+        </p>
       </div>
 
-      <div className="bg-dark rounded-lg border border-light/10">
-        <table className="w-full text-left">
-          <thead className="border-b border-light/10">
-            <tr>
-              <th className="p-4">Name</th>
-              <th className="p-4">Featured</th>
-              <th className="p-4">Created At</th>
-              <th className="p-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.map((project) => (
-              <tr
-                key={project.slug}
-                className="border-b border-light/10 last:border-b-0"
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Projects"
+          value={projectCount}
+          icon={<GitMerge className="text-secondary" />}
+        />
+        <StatCard
+          title="Published Articles"
+          value={articleCount}
+          icon={<PenSquare className="text-secondary" />}
+        />
+        <StatCard
+          title="Published Quotes"
+          value={quoteCount}
+          icon={<Quote className="text-secondary" />}
+        />
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Recent Activity</h2>
+        <div className="bg-dark rounded-lg border border-light/10">
+          <ul className="divide-y divide-light/10">
+            {recentItems.map((item) => (
+              <li
+                key={item.id}
+                className="p-4 flex justify-between items-center hover:bg-dark/70 transition-colors"
               >
-                <td className="p-4 font-semibold">{project.name}</td>
-                <td className="p-4">{project.is_featured ? "Yes" : "No"}</td>
-                <td className="p-4 text-light/70">
-                  {new Date(project.created_at).toLocaleDateString()}
-                </td>
-                <td className="p-4">
-                  <div className="flex justify-end items-center gap-6">
-                    <Link
-                      href={`/mudir/projects/${project.slug}`}
-                      className="flex items-center gap-2 font-bold text-secondary hover:text-secondary/80 transition-colors"
-                    >
-                      <Edit className="w-4 h-4" /> Edit
-                    </Link>
-                    <DeleteProjectButton id={project.id} />
-                  </div>
-                </td>
-              </tr>
+                <div>
+                  <span className="font-semibold">{item.title}</span>
+                  <p className="text-sm text-light/50">
+                    <span className="capitalize">{item.content_type}</span> -
+                    Updated{" "}
+                    {new Date(
+                      item.updated_at || Date.now()
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
+                <Link
+                  href={`/mudir/content/${item.id}`}
+                  className="p-2 text-light/70 hover:text-light transition-colors"
+                >
+                  <ArrowUpRight className="w-5 h-5" />
+                </Link>
+              </li>
             ))}
-            {projects.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-center p-8 text-light/50">
-                  No projects found. Add one to get started!
-                </td>
-              </tr>
+            {recentItems.length === 0 && (
+              <li className="p-8 text-center text-light/50">
+                No recent activity.
+              </li>
             )}
-          </tbody>
-        </table>
+          </ul>
+        </div>
       </div>
     </div>
   );

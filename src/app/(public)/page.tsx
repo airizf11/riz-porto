@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// src/app/(public)/page.tsx
 import { Suspense } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { AboutSection } from "@/components/AboutSection";
