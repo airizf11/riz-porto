@@ -9,70 +9,146 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 
-export const iconMap = {
-  FaYoutube,
-  FaTiktok,
-  FaInstagram,
-  FaGithub,
-  FaLinkedin,
+type Project = {
+  case_study: string | null;
+  created_at: string;
+  description: string;
+  id: string;
+  image_url: string | null;
+  is_featured: boolean;
+  live_url: string | null;
+  name: string;
+  order_index: number | null;
+  repo_url: string | null;
+  slug: string | null;
+  stack: string | null;
+  updated_at: string | null;
 };
 
-export const getAboutData = cache(async () => {
-  const { data, error } = await supabase
-    .from("about_data")
-    .select("key, value");
-  if (error) {
-    console.error("Error fetching about data:", error);
-    return {
-      headline: {
-        part1: "Driven by",
-        highlight1: "curiosity",
-        part2: "built by",
-        highlight2: "collaboration",
-        part3: ".",
+export const getProjectBySlug = cache(
+  async (slug: string): Promise<Project | null> => {
+    console.log(`[DATA FETCH] Fetching project by slug: ${slug}`);
+
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) {
+      console.error(`Error fetching project ${slug}:`, error?.message);
+      return null;
+    }
+    return data;
+  }
+);
+
+export const socialGroups = [
+  {
+    category: "Code & Professional",
+    color: "text-light",
+    borderColor: "border-light",
+    links: [
+      {
+        icon: FaGithub,
+        name: "GitHub",
+        desc: "My code & projects",
+        url: "https://github.com/airizf11",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/airizf1101.jpg",
       },
-      narrative: "Error loading dynamic content. Please check the connection.",
-    };
-  }
+      {
+        icon: FaLinkedin,
+        name: "LinkedIn",
+        desc: "",
+        url: "https://linkedin.com/in/rizkifebrianm",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/linkedin01.jpg",
+      },
+    ],
+  },
+  {
+    category: "Social Media",
+    color: "text-tertiary",
+    borderColor: "border-tertiary",
+    links: [
+      {
+        icon: FaInstagram,
+        name: "Instagram",
+        desc: "Mix of life",
+        url: "https://instagram.com/rizyan.people",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizyan.people01.jpg",
+      },
+      {
+        icon: FaTiktok,
+        name: "@akuriziyan",
+        desc: "Random ideas & creative bits",
+        url: "https://www.tiktok.com/@akuriziyan",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/akuriziyan-tt01.jpg",
+      },
+    ],
+  },
+  {
+    category: "YouTube Channels",
+    color: "text-primary",
+    borderColor: "border-primary",
+    links: [
+      {
+        icon: FaYoutube,
+        name: "Rizyan Channel",
+        desc: "Gadget, tech, & breakdowns",
+        url: "https://www.youtube.com/rizyanchannel",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizyanch01.jpg",
+      },
+      {
+        icon: FaYoutube,
+        name: "Rizian Day",
+        desc: "Thoughts & reflections",
+        url: "https://www.youtube.com/@rizianday",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizianday01.jpg",
+      },
+      {
+        icon: FaYoutube,
+        name: "RizianSG",
+        desc: "Gaming & live content",
+        url: "https://www.youtube.com/@riziansg",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/riziansg01.jpg",
+      } /*
+      {
+        icon: FaYoutube,
+        name: "RiFe M Musik",
+        desc: "Music & covers",
+        url: "https://www.youtube.com/@rifemusik",
+        imageUrl: "https://placehold.co/600x400/9b59b6/ffffff?text=Gaming",
+      },
+      {
+        icon: FaYoutube,
+        name: "Rizian Live",
+        desc: "Former game stream archives",
+        url: "https://www.youtube.com/@rizianlive",
+        imageUrl:
+          "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/rizianlive01.jpg",
+      }, */,
+    ],
+  },
+];
 
-  const aboutObject = data.reduce((obj, item) => {
-    obj[item.key] = item.value;
-    return obj;
-  }, {} as Record<string, string>);
-
-  return {
-    headline: {
-      part1: aboutObject.headline_part1 || "",
-      highlight1: aboutObject.headline_highlight1 || "",
-      part2: aboutObject.headline_part2 || "",
-      highlight2: aboutObject.headline_highlight2 || "",
-      part3: aboutObject.headline_part3 || "",
-    },
-    narrative: aboutObject.narrative || "",
-  };
-});
-
-export const getSocialGroups = cache(async () => {
-  const { data, error } = await supabase
-    .from("social_groups")
-    .select(
-      `
-            *,
-            social_links (
-                *
-            )
-        `
-    )
-    .order("order_index", { ascending: true })
-    .order("id", { foreignTable: "social_links", ascending: true });
-
-  if (error) {
-    console.error("Error fetching social groups:", error.message);
-    return [];
-  }
-
-  return data.map((group) => ({
-    ...group,
-    links: group.social_links,
-  }));
-});
+export const aboutData = {
+  headline: {
+    part1: "Driven by ",
+    highlight1: "curiosity, ",
+    part2: "built by ",
+    highlight2: "collaboration",
+    part3: ".",
+  },
+  narrative: `I’m a self-taught web explorer working collaboratively with AI to
+  build tools and stories that matter. From managing YouTube
+  channels and recording Islamic talks to developing research tools
+  like <b class="font-bold text-light">Apdetax</b>, I mix code,
+  content, and curiosity — all driven by purpose.`,
+};
