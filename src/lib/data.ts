@@ -8,7 +8,8 @@ import {
   FaGithub,
   FaLinkedin,
 } from "react-icons/fa";
-import React from "react";
+import React, { cache } from "react";
+import { supabase } from "./supabase";
 
 export const iconMap: { [key: string]: React.ElementType } = {
   FaYoutube,
@@ -89,3 +90,37 @@ export const aboutData = {
   content, and curiosity — all driven by purpose.`,
 };
 */
+
+type Project = {
+  case_study: string | null;
+  created_at: string;
+  description: string;
+  id: string;
+  image_url: string | null;
+  is_featured: boolean;
+  live_url: string | null;
+  name: string;
+  order_index: number | null;
+  repo_url: string | null;
+  slug: string | null;
+  stack: string | null;
+  updated_at: string | null;
+};
+
+export const getProjectBySlug = cache(
+  async (slug: string): Promise<Project | null> => {
+    console.log(`[DATA FETCH] Fetching project by slug: ${slug}`);
+
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (error || !data) {
+      console.error(`Error fetching project ${slug}:`, error?.message);
+      return null;
+    }
+    return data;
+  }
+);
