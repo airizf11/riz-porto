@@ -5,7 +5,6 @@ import { AboutSection } from "@/components/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { SocialsSection } from "@/components/SocialsSection";
 import { QuoteSection } from "@/components/QuoteSection";
-import { Footer } from "@/components/Footer";
 import { HomeContactSection } from "@/components/HomeContactSection";
 import { Divider } from "@/components/Divider";
 import { ProjectsSkeleton } from "@/components/ProjectsSkeleton";
@@ -34,7 +33,6 @@ export default async function HomePage() {
       </Suspense>
       <Divider />
       <HomeContactSection />
-      <Footer />
     </main>
   );
 }

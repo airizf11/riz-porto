@@ -1,4 +1,5 @@
 // src/app/(public)/layout.tsx
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
 export default function PublicLayout({
@@ -9,7 +10,10 @@ export default function PublicLayout({
   return (
     <>
       <Header />
-      <main className="pt-20">{children}</main>
+      <main className="pt-20">
+        {children}
+        <Footer />
+      </main>
     </>
   );
 }

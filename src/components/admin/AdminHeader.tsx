@@ -3,12 +3,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Newspaper } from "lucide-react";
+import { LayoutDashboard, Newspaper, UserSearchIcon } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 
 const navLinks = [
   { name: "Dashboard", href: "/mudir", icon: LayoutDashboard },
   { name: "Content", href: "/mudir/content", icon: Newspaper },
+  { name: "Socials", href: "/mudir/socials", icon: UserSearchIcon },
 ];
 
 export function AdminHeader() {

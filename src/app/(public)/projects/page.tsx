@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "All Projects | Riziyan's Portfolio",
+  title: "All My Projects ",
   description:
     "A gallery of all my web development and content creation projects.",
 };

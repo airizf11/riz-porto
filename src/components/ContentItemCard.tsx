@@ -1,6 +1,7 @@
 // src/components/ContentItemCard.tsx
 import Link from "next/link";
 import { ArrowUpRight, GitMerge, PenSquare, Quote, Star } from "lucide-react";
+import React from "react";
 
 type ContentItem = {
   id: string;
@@ -14,23 +15,28 @@ const getContentUrl = (item: {
   content_type: string;
   slug: string;
 }): string => {
-  // in future, can make more dynamic.
   const typeToPathMap: { [key: string]: string } = {
     project: "/projects",
     article: "/articles",
-    quote: "/quotes",
     review: "/reviews",
+    quote: `/blog#quote-${item.slug}`,
   };
-  const path = typeToPathMap[item.content_type] || "/";
-  return `${path}/${item.slug}`;
+
+  const basePath = typeToPathMap[item.content_type] || "/blog";
+
+  if (basePath.includes("#")) {
+    return basePath;
+  }
+
+  return `${basePath}/${item.slug}`;
 };
 
 const ContentTypeIcon = ({ type }: { type: string }) => {
   const iconMap: { [key: string]: React.ElementType } = {
     project: GitMerge,
     article: PenSquare,
-    quote: Quote,
     review: Star,
+    quote: Quote,
   };
   const Icon = iconMap[type] || PenSquare;
   return <Icon className="w-4 h-4 text-secondary" />;

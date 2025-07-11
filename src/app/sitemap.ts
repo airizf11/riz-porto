@@ -6,7 +6,14 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://akuriziyan.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["/", "/contact", "/tags", "/projects"].map((route) => ({
+  const staticRoutes = [
+    "/",
+    "/contact",
+    "/projects",
+    "/articles",
+    "/tags",
+    "/blog",
+  ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
@@ -34,7 +41,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.log(
       `Sitemap generated with ${staticRoutes.length} static and ${projectRoutes.length} project routes.`
     );
-    return [...staticRoutes, ...projectRoutes];
+
+    const { data: contents } = await supabase
+      .from("content_items")
+      .select("slug, content_type, updated_at")
+      .eq("status", "published");
+
+    if (!contents) {
+      return staticRoutes;
+    }
+
+    const dynamicRoutes = contents.map((item) => ({
+      url: `${BASE_URL}/${item.content_type}s/${item.slug}`,
+      lastModified: new Date(item.updated_at || new Date()),
+    }));
+
+    const { data: tags } = await supabase.from("tags").select("slug");
+    const tagRoutes = tags
+      ? tags.map((tag) => ({
+          url: `${BASE_URL}/tags/${tag.slug}`,
+          lastModified: new Date(),
+          changeFrequency: "weekly" as const,
+        }))
+      : [];
+
+    return [...staticRoutes, ...projectRoutes, ...dynamicRoutes, ...tagRoutes];
   } catch (error) {
     console.error("Failed to generate dynamic sitemap routes:", error);
     return staticRoutes;
