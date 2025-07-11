@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Calendar, ArrowRight, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "All Articles | Riziyan's Blog",
+  title: "All Articles ",
   description:
     "A collection of articles on technology, development, and personal insights.",
 };
@@ -31,7 +31,7 @@ export default async function ArticlesPage() {
 
   return (
     <main className="min-h-screen bg-dark text-light">
-      <div className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
+      <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
         <Link
           href="/"
           className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
@@ -40,8 +40,8 @@ export default async function ArticlesPage() {
           Back to Home
         </Link>
         <div className="text-center mb-16">
-          <h1 className="heading text-4xl md:text-6xl text-secondary mb-4">
-            Library of Thoughts
+          <h1 className="heading text-4xl md:text-6xl text-secondary mb-8">
+            Articles
           </h1>
           <p className="narrative text-xl text-light/80">
             Insights and tutorials from my journey in tech and beyond.

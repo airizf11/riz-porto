@@ -20,7 +20,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-20 bg-dark/70 backdrop-blur-md border-b border-light/10 rounded-b-2xl px-6">
           <Link
             href="/"
-            className="text-xl font-bold text-light hover:text-accent transition-colors"
+            className="text-xl font-bold text-light hover:text-accent transition-transform hover:scale-105 active:scale-95"
           >
             Riziyan
           </Link>
@@ -31,7 +31,7 @@ export const Header = () => {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`font-medium transition-colors ${
+                  className={`font-medium transition-transform hover:scale-105 active:scale-95 transition-colors ${
                     isActive ? "text-accent" : "text-light/70 hover:text-light"
                   }`}
                 >

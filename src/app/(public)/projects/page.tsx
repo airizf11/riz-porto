@@ -40,7 +40,7 @@ export default async function AllProjectsPage() {
         </Link>
 
         <div className="text-center mb-16">
-          <h1 className="heading text-4xl md:text-6xl text-primary mb-4">
+          <h1 className="heading text-4xl md:text-6xl text-primary mb-8">
             Project Gallery
           </h1>
           <p className="narrative text-xl text-light/80">

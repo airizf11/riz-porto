@@ -4,6 +4,8 @@
 import { useFormStatus } from "react-dom";
 import { authenticate } from "./actions";
 import { useActionState } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 function LoginButton() {
   const { pending } = useFormStatus();
@@ -24,8 +26,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-dark text-light">
       <div className="w-full max-w-sm">
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          Back to Home
+        </Link>
         <h1 className="heading text-4xl text-center text-accent mb-8">
-          Mudir Panel
+          Admin Panel
         </h1>
         <form action={formAction} className="flex flex-col gap-6">
           <div>

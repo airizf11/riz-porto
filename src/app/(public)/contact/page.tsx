@@ -32,7 +32,7 @@ export default function ContactPage() {
   if (state.success) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center p-8">
-        <h1 className="heading text-4xl text-accent mb-4">Thank You!</h1>
+        <h1 className="heading text-6xl text-accent mb-4">Thank You!</h1>
         <p className="text-xl text-light/80">{state.message}</p>
         <Link
           href="/"
@@ -46,7 +46,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-6xl">
         <Link
           href="/"
           className="text-light/70 hover:text-light mb-8 inline-block"

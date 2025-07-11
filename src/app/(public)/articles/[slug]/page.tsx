@@ -67,7 +67,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <main className="min-h-screen bg-dark text-light">
-      <article className="container mx-auto max-w-3xl px-4 py-12 md:py-20">
+      <article className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
         <div className="mb-8 text-sm text-light/60">
           <Link href="/" className="hover:text-light transition-colors">
             Home
@@ -85,7 +85,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </h1>
           <div className="flex items-center justify-center gap-4 text-sm text-light/60">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-16" />
+              <Calendar className="w-4 h-12" />
               <time dateTime={article.created_at}>
                 {new Date(article.created_at).toLocaleDateString("en-US", {
                   year: "numeric",

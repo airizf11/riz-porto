@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { ContentItemCard } from "@/components/ContentItemCard"; // Komponen ini tetap kita gunakan
+import Link from "next/link";
 
 interface TagDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -82,9 +83,20 @@ export default async function TagDetailPage({ params }: TagDetailPageProps) {
 
   return (
     <main className="min-h-screen bg-dark text-light">
-      <div className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
+      <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
+        <div className="mb-8 text-sm text-light/60">
+          <Link href="/" className="hover:text-light transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link href="/tags" className="hover:text-light transition-colors">
+            Tags
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-light font-semibold">{tagData.name}</span>
+        </div>
         <div className="text-center mb-16">
-          <p className="narrative text-xl text-light/80 mb-2">
+          <p className="narrative text-4xl text-light/80 mb-6">
             Content tagged with
           </p>
           <h1 className="heading text-4xl md:text-6xl text-accent">
