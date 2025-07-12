@@ -1,10 +1,9 @@
 // src/app/(public)/crypto/page.tsx
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Crypto Page ",
+  title: "Bitcoin (BTC) - Crypto Page ",
   description:
     "Live price tracking and simple data visualization for Bitcoin or other Crypto currency.",
 };
@@ -53,14 +52,21 @@ export default async function BitcoinTrackerPage() {
   return (
     <main className="min-h-screen bg-dark text-light">
       <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
-        <div className="text-center mb-12">
+        <div className="mb-8 text-sm text-light/60">
+          <Link href="/" className="hover:text-light transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <Link
+            href="/exp/beta/crypto"
+            className="hover:text-light transition-colors"
+          >
+            Crypto
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-light font-semibold">Bitcoin Tracker</span>
+        </div>
+        <div className="text-center mb-16">
           <h1 className="heading text-4xl md:text-6xl text-accent mb-8">
             Bitcoin Tracker
           </h1>

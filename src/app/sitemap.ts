@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/articles",
     "/tags",
     "/blog",
-    "/crypto",
+    "/exp/beta/crypto/bitcoin",
   ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date(),
