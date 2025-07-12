@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 const siteConfig = {
   title: "Riziyan - Digital Explorer & Creator",
   description:
-    "I build and share things for the curious mind. A personal portfolio for tech, education, and content creation.",
+    "I build and share things for the curious mind. A personal portfolio for tech, education, content creation and more.",
   url: "https://akuriziyan.vercel.app",
   ogImage:
     "https://eweydsgczhxcnmnmstsg.supabase.co/storage/v1/object/public/assets/public/profile-picture.jpg",
