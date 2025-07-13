@@ -1,4 +1,4 @@
-// src/app/(public)/crypto/page.tsx
+// src/app/(public)/exp/obsl/bitcoin/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 

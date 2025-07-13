@@ -1,6 +1,13 @@
 // src/components/ContentItemCard.tsx
 import Link from "next/link";
-import { ArrowUpRight, GitMerge, PenSquare, Quote, Star } from "lucide-react";
+import {
+  ArrowUpRight,
+  FlaskConical,
+  GitMerge,
+  PenSquare,
+  Quote,
+  Star,
+} from "lucide-react";
 import React from "react";
 
 type ContentItem = {
@@ -19,6 +26,7 @@ const getContentUrl = (item: {
     project: "/projects",
     article: "/articles",
     review: "/reviews",
+    experiment: "/exp",
     quote: `/blog#quote-${item.slug}`,
   };
 
@@ -37,6 +45,7 @@ const ContentTypeIcon = ({ type }: { type: string }) => {
     article: PenSquare,
     review: Star,
     quote: Quote,
+    experiment: FlaskConical,
   };
   const Icon = iconMap[type] || PenSquare;
   return <Icon className="w-4 h-4 text-secondary" />;

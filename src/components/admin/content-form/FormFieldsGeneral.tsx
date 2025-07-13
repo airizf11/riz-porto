@@ -31,6 +31,7 @@ export function FormFieldsGeneral({
           <option value="article">Article</option>
           <option value="quote">Quote</option>
           <option value="review">Review</option>
+          <option value="experiment">Experiment</option>
         </select>
       </FormField>
       <FormField label="Status" error={errors?.status}>
