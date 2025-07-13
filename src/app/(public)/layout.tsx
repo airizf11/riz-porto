@@ -10,7 +10,7 @@ export default function PublicLayout({
   return (
     <>
       <Header />
-      <main className="pt-16">
+      <main className="relative z-10 pt-28">
         {children}
         <Footer />
       </main>
