@@ -24,7 +24,6 @@ export type FormState = {
   message: string | null;
 };
 
-// Zod schema untuk content_item
 const contentItemSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(3, "Title is required"),
@@ -51,13 +50,11 @@ const contentItemSchema = z.object({
   author_name: z.string().optional(),
 });
 
-// Zod schema untuk tag
 const tagsSchema = z.object({
   topic_tags: z.string().optional(),
   tech_tags: z.string().optional(),
 });
 
-// Helper function untuk memproses dan mendapatkan ID tag
 async function processTags(
   supabase: any,
   tagString: string | undefined,
@@ -71,7 +68,6 @@ async function processTags(
     .filter(Boolean);
   if (tagNames.length === 0) return [];
 
-  // Ambil tag yang sudah ada
   const { data: existingTags, error: selectError } = await supabase
     .from("tags")
     .select("id, name")
@@ -138,7 +134,7 @@ export async function createOrUpdateContent(
   try {
     const topicTagIds = await processTags(supabase, topic_tags, "topic");
     const techTagIds = await processTags(supabase, tech_tags, "tech");
-    const allTagIds = [...new Set([...topicTagIds, ...techTagIds])]; // Gabungkan dan hapus duplikat
+    const allTagIds = [...new Set([...topicTagIds, ...techTagIds])];
 
     let contentItemId = id;
 
@@ -163,7 +159,6 @@ export async function createOrUpdateContent(
 
     if (!contentItemId) throw new Error("Content Item ID is missing.");
 
-    // Hapus relasi tag lama
     const { error: deleteTagsError } = await supabase
       .from("content_tags")
       .delete()
@@ -171,7 +166,6 @@ export async function createOrUpdateContent(
     if (deleteTagsError)
       throw new Error(`Failed to clear old tags: ${deleteTagsError.message}`);
 
-    // Tambahkan relasi tag baru
     if (allTagIds.length > 0) {
       const tagsToLink = allTagIds.map((tagId) => ({
         content_item_id: contentItemId!,
@@ -187,21 +181,19 @@ export async function createOrUpdateContent(
     return { message: error.message };
   }
 
-  // Revalidasi path
   revalidatePath("/");
-  revalidatePath(`/${contentData.content_type}s`); // /projects, /articles
+  revalidatePath(`/${contentData.content_type}s`);
   revalidatePath(`/${contentData.content_type}s/${contentData.slug}`);
   revalidatePath("/mudir");
 
-  redirect("/mudir");
+  redirect("/mudir/content");
 }
 
 export async function deleteContent(id: string) {
-  // ... (Logika ini hampir sama, hanya mengubah nama tabel)
   const supabase = await createClient();
   const { error } = await supabase.from("content_items").delete().eq("id", id);
   if (error) throw new Error("Failed to delete content.");
 
   revalidatePath("/");
-  revalidatePath("/mudir");
+  revalidatePath("/mudir/content");
 }

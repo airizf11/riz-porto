@@ -124,3 +124,19 @@ export const getProjectBySlug = cache(
     return data;
   }
 );
+
+export async function getPublishedQuotes() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("content_items")
+    .select("title, author_name")
+    .eq("content_type", "quote")
+    .eq("status", "published");
+
+  if (error) {
+    console.error("Error fetching quotes:", error.message);
+    return [];
+  }
+
+  return data;
+}

@@ -1,15 +1,12 @@
 // src/components/QuoteSection.tsx
 /* eslint-disable react/no-unescaped-entities */
 import { AnimatedSection } from "./AnimatedSection";
-import { supabase } from "@/lib/supabase";
+import { getPublishedQuotes } from "@/lib/data";
 
 export const QuoteSection = async () => {
-  const { data: quotes, error } = await supabase
-    .from("quotes")
-    .select("text, author")
-    .eq("is_active", true);
+  const quotes = await getPublishedQuotes();
 
-  if (error || !quotes || quotes.length === 0) {
+  if (!quotes || quotes.length === 0) {
     return (
       <AnimatedSection className="w-full py-20 bg-dark">
         <div className="container mx-auto max-w-4xl px-8 text-center">
@@ -28,9 +25,11 @@ export const QuoteSection = async () => {
     <AnimatedSection className="w-full py-20 bg-dark">
       <div className="container mx-auto max-w-4xl px-8 text-center">
         <blockquote className="narrative text-3xl md:text-4xl text-accent italic">
-          "{quote.text}"
+          "{quote.title}"
         </blockquote>
-        {quote.author && <p className="mt-4 text-light/70">- {quote.author}</p>}
+        {quote.author_name && (
+          <p className="mt-4 text-light/70">- {quote.author_name}</p>
+        )}
       </div>
     </AnimatedSection>
   );

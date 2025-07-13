@@ -82,7 +82,7 @@ export async function createOrUpdateProject(
   revalidatePath("/projects");
   revalidatePath(`/projects/${projectData.slug}`);
 
-  redirect("/mudir");
+  redirect("/mudir/projects");
 }
 
 export async function deleteProject(id: string) {
@@ -104,5 +104,5 @@ export async function deleteProject(id: string) {
 
   revalidatePath("/");
   revalidatePath("/projects");
-  revalidatePath("/mudir");
+  revalidatePath("/mudir/projects");
 }
