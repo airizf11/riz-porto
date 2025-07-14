@@ -17,7 +17,7 @@ const navLinks = [
   { name: "Content", href: "/mudir/content", icon: Newspaper },
   { name: "Socials", href: "/mudir/socials", icon: Share2 },
   { name: "Settings", href: "/mudir/settings", icon: Settings },
-  { name: "Links", href: "/mudir/Links", icon: Link2 },
+  { name: "Links", href: "/mudir/links", icon: Link2 },
 ];
 
 export function AdminHeader() {
