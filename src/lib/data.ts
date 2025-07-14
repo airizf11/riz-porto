@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import React, { cache } from "react";
 import { supabase } from "./supabase";
+import { PenSquare, GitMerge, Link2 } from "lucide-react";
 
 export const iconMap: { [key: string]: React.ElementType } = {
   FaYoutube,
@@ -17,6 +18,9 @@ export const iconMap: { [key: string]: React.ElementType } = {
   FaInstagram,
   FaGithub,
   FaLinkedin,
+  PenSquare,
+  GitMerge,
+  Link2,
 };
 
 export async function getGroupedSocialLinks() {
