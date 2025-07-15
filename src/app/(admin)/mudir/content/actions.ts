@@ -34,7 +34,7 @@ const contentItemSchema = z.object({
       /^[a-z0-9-]+$/,
       "Slug can only contain lowercase letters, numbers, and hyphens"
     ),
-  content_type: z.enum(["project", "article", "quote", "review"]),
+  content_type: z.enum(["project", "article", "quote", "review", "experiment"]),
   status: z.enum(["draft", "published"]),
   content: z.string().optional(),
   excerpt: z.string().optional(),

@@ -7,6 +7,7 @@ import {
   GalleryThumbnails,
   LayoutDashboard,
   Link2,
+  MemoryStick,
   Newspaper,
   Settings,
   Share2,
@@ -20,6 +21,7 @@ const navLinks = [
   { name: "Socials", href: "/mudir/socials", icon: Share2 },
   { name: "Links", href: "/mudir/links", icon: Link2 },
   { name: "Settings", href: "/mudir/settings", icon: Settings },
+  { name: "AI Mems", href: "/mudir/aichat", icon: MemoryStick },
 ];
 
 export function AdminHeader() {
