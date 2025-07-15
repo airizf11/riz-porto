@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  GalleryThumbnails,
   LayoutDashboard,
   Link2,
   Newspaper,
@@ -15,9 +16,10 @@ import { LogoutButton } from "./LogoutButton";
 const navLinks = [
   { name: "Dashboard", href: "/mudir", icon: LayoutDashboard },
   { name: "Content", href: "/mudir/content", icon: Newspaper },
+  { name: "Projects", href: "/mudir/projects", icon: GalleryThumbnails },
   { name: "Socials", href: "/mudir/socials", icon: Share2 },
-  { name: "Settings", href: "/mudir/settings", icon: Settings },
   { name: "Links", href: "/mudir/links", icon: Link2 },
+  { name: "Settings", href: "/mudir/settings", icon: Settings },
 ];
 
 export function AdminHeader() {
