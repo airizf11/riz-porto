@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.2.22",
+    "@google/generative-ai": "^0.24.1",
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
     "@supabase/ssr": "^0.6.1",
@@ -16,6 +18,7 @@
     "@vercel/analytics": "^1.5.0",
     "@vercel/og": "^0.6.8",
     "@vercel/speed-insights": "^1.2.0",
+    "ai": "^4.3.18",
     "clsx": "^2.1.1",
     "easymde": "^2.20.0",
     "framer-motion": "^12.18.1",
