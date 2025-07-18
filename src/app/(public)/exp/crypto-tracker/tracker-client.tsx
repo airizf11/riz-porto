@@ -4,24 +4,21 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { PriceChart } from "./PriceChart";
-
-type InitialData = {
-  initialPrice: number | null;
-  initialChartData: { timestamp: number; price: number }[];
-};
-
-type CryptoData = {
-  currentPrice: number | null;
-  chartData: { timestamp: number; price: number }[];
-};
+import { ProfitCalculator } from "./ProfitCalculator";
 
 const COINS = [
-  { id: "bitcoin", name: "Bitcoin (BTC)" },
-  { id: "ethereum", name: "Ethereum (ETH)" },
-  { id: "solana", name: "Solana (SOL)" },
-  { id: "dogecoin", name: "Dogecoin (DOGE)" },
+  { id: "bitcoin", name: "Bitcoin (BTC)", symbol: "BTC" },
+  { id: "ethereum", name: "Ethereum (ETH)", symbol: "ETH" },
+  { id: "solana", name: "Solana (SOL)", symbol: "SOL" },
+  { id: "ripple", name: "XRP (XRP)", symbol: "XRP" },
+  { id: "cardano", name: "Cardano (ADA)", symbol: "ADA" },
+  { id: "dogecoin", name: "Dogecoin (DOGE)", symbol: "DOGE" },
+  { id: "shiba-inu", name: "Shiba Inu (SHIB)", symbol: "SHIB" },
+  { id: "chainlink", name: "Chainlink (LINK)", symbol: "LINK" },
+  { id: "the-hype", name: "Hype (HYPE)", symbol: "HYPE" },
 ];
-const CURRENCIES = ["usd", "idr", "eur", "jpy"];
+
+const CURRENCIES = ["usd", "idr", "eur", "jpy", "gbp"];
 const TIME_RANGES = [
   { value: "1", label: "1D" },
   { value: "7", label: "7D" },
@@ -30,6 +27,9 @@ const TIME_RANGES = [
   { value: "365", label: "1Y" },
 ];
 
+type InitialData = { initialPrice: number | null; initialChartData: any[] };
+type CryptoData = { currentPrice: number | null; chartData: any[] };
+
 export default function CryptoTrackerClient({
   initialData,
 }: {
@@ -37,7 +37,7 @@ export default function CryptoTrackerClient({
 }) {
   const [selectedCoin, setSelectedCoin] = useState("bitcoin");
   const [selectedCurrency, setSelectedCurrency] = useState("usd");
-  const [timeRange, setTimeRange] = useState("30");
+  const [timeRange, setTimeRange] = useState("7");
 
   const [data, setData] = useState<CryptoData>({
     currentPrice: initialData.initialPrice,
@@ -51,30 +51,21 @@ export default function CryptoTrackerClient({
       setIsLoading(true);
       setError(null);
       try {
-        const [priceResponse, chartResponse] = await Promise.all([
-          fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${selectedCoin}&vs_currencies=${selectedCurrency}`
-          ),
-          fetch(
-            `https://api.coingecko.com/api/v3/coins/${selectedCoin}/market_chart?vs_currency=${selectedCurrency}&days=${timeRange}`
-          ),
-        ]);
+        const params = new URLSearchParams({
+          coin: selectedCoin,
+          currency: selectedCurrency,
+          days: timeRange,
+        });
+        const response = await fetch(`/api/crypto?${params.toString()}`);
 
-        if (!priceResponse.ok || !chartResponse.ok) {
-          throw new Error(
-            "Failed to fetch data from CoinGecko API. May be rate-limited."
-          );
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch data from API.");
         }
-
-        const priceData = await priceResponse.json();
-        const chartDataRaw = await chartResponse.json();
-
+        const fetchedData = await response.json();
         setData({
-          currentPrice: priceData[selectedCoin]?.[selectedCurrency] || null,
-          chartData: chartDataRaw.prices.map((p: [number, number]) => ({
-            timestamp: p[0],
-            price: p[1],
-          })),
+          currentPrice: fetchedData.currentPrice,
+          chartData: fetchedData.chartData,
         });
       } catch (err: any) {
         setError(err.message);
@@ -82,32 +73,22 @@ export default function CryptoTrackerClient({
         setIsLoading(false);
       }
     }
+    fetchData();
+  }, [selectedCoin, selectedCurrency, timeRange]);
 
-    if (
-      selectedCoin !== "bitcoin" ||
-      selectedCurrency !== "usd" ||
-      timeRange !== "30"
-    ) {
-      fetchData();
-    } else {
-      setData({
-        currentPrice: initialData.initialPrice,
-        chartData: initialData.initialChartData,
-      });
-    }
-  }, [selectedCoin, selectedCurrency, timeRange, initialData]);
-
-  const currentCoinName = useMemo(
-    () => COINS.find((c) => c.id === selectedCoin)?.name,
+  const currentCoinInfo = useMemo(
+    () => COINS.find((c) => c.id === selectedCoin),
     [selectedCoin]
   );
+
   const formattedPrice = useMemo(() => {
     if (data.currentPrice === null) return "...";
+    const isIdr = selectedCurrency.toLowerCase() === "idr";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: selectedCurrency.toUpperCase(),
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: isIdr ? 0 : 2,
+      maximumFractionDigits: isIdr ? 0 : 8,
     }).format(data.currentPrice);
   }, [data.currentPrice, selectedCurrency]);
 
@@ -172,13 +153,21 @@ export default function CryptoTrackerClient({
         ) : (
           <>
             <div className="mb-6 px-4">
-              <h2 className="text-2xl text-light/80">{currentCoinName}</h2>
+              <h2 className="text-2xl text-light/80">
+                {currentCoinInfo?.name}
+              </h2>
               <p className="text-5xl font-bold text-accent">{formattedPrice}</p>
             </div>
             <PriceChart data={data.chartData} currency={selectedCurrency} />
           </>
         )}
       </div>
+
+      <ProfitCalculator
+        coins={COINS}
+        currencies={CURRENCIES}
+        currentPrices={{ [selectedCoin]: data.currentPrice }}
+      />
     </div>
   );
 }
