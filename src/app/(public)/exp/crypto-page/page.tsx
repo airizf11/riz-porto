@@ -1,4 +1,4 @@
-// src/app/(public)/exp/crypto-tracker/page.tsx
+// src/app/(public)/exp/crypto-page/page.tsx
 import { Metadata } from "next";
 import CryptoTrackerClient from "./tracker-client";
 import Link from "next/link";

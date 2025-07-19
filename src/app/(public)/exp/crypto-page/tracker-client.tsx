@@ -1,4 +1,4 @@
-// src/app/(public)/exp/crypto-tracker/tracker-client.tsx
+// src/app/(public)/exp/crypto-page/tracker-client.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 

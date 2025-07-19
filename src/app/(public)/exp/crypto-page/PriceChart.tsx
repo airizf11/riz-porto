@@ -1,4 +1,4 @@
-// src/app/(public)/exp/crypto-tracker/PriceChart.tsx
+// src/app/(public)/exp/crypto-page/PriceChart.tsx
 "use client";
 import {
   AreaChart,
