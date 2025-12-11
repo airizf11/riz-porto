@@ -1,95 +1,136 @@
 /* src/app/globals.css */
 @import "tailwindcss";
+
+@plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --color-primary: 221 28 26;
-  --color-accent: 240 198 6;
-  --color-secondary: 8 103 136;
-  --color-tertiary: 6 174 213;
-  --color-light: 255 241 208;
-  --color-dark: 28 28 28;
+  /* --- IDENTITY: RIZIYAN BRAND COLORS (Converted to OKLCH) --- */
+  
+  /* Background: Dark Grey (28, 28, 28) */
+  --background: oklch(0.20 0 0); 
+  /* Text: Cream (255, 241, 208) */
+  --foreground: oklch(0.94 0.04 87); 
 
-  --background: var(--color-dark);
-  --foreground: var(--color-light);
+  /* Card: Sedikit lebih terang dari BG utama */
+  --card: oklch(0.23 0 0); 
+  --card-foreground: oklch(0.94 0.04 87);
+ 
+  /* Popover (Dropdown/Modal) */
+  --popover: oklch(0.20 0 0);
+  --popover-foreground: oklch(0.94 0.04 87);
+ 
+  /* Primary: RED (221, 28, 26) -> Main Action / Button */
+  --primary: oklch(0.53 0.23 28); 
+  --primary-foreground: oklch(0.985 0 0); /* Putih buat teks di atas merah */
+ 
+  /* Secondary: BLUE (8, 103, 136) -> Badges / Sub-elements */
+  --secondary: oklch(0.40 0.10 235);
+  --secondary-foreground: oklch(0.985 0 0);
+ 
+  /* Muted: Abu-abu pudar buat teks deskripsi/border tipis */
+  --muted: oklch(0.30 0 0);
+  --muted-foreground: oklch(0.70 0.02 87);
+ 
+  /* Accent: YELLOW (240, 198, 6) -> Highlights / Hover state */
+  --accent: oklch(0.82 0.18 85);
+  --accent-foreground: oklch(0.20 0 0); /* Teks gelap di atas kuning */
+ 
+  /* Destructive: Error state */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
 
-  --font-inter: "__Inter_Fallback_123", sans-serif;
-  --font-lora: "__Lora_Fallback_456", serif;
+  /* Border & Input lines (Cream pudar) */
+  --border: oklch(0.94 0.04 87 / 0.15);
+  --input: oklch(0.94 0.04 87 / 0.15);
+  --ring: oklch(0.53 0.23 28); /* Focus ring warna Merah */
+
+  /* Charts (Keep Shadcn default or adjust later) */
+  --chart-1: oklch(0.53 0.23 28); /* Match primary */
+  --chart-2: oklch(0.40 0.10 235); /* Match secondary */
+  --chart-3: oklch(0.82 0.18 85); /* Match accent */
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+
+  /* Radius Setup */
+  --radius: 0.625rem;
+  
+  /* Font Variables (Make sure Next.js font loader uses these names) */
+  --font-inter: var(--font-inter); 
+  --font-lora: var(--font-lora);
 }
 
-@theme {
-  --color-primary: rgb(var(--color-primary));
-  --color-accent: rgb(var(--color-accent));
-  --color-secondary: rgb(var(--color-secondary));
-  --color-tertiary: rgb(var(--color-tertiary));
-  --color-light: rgb(var(--color-light));
-  --color-dark: rgb(var(--color-dark));
+/* JIKA MAU SUPPORT LIGHT MODE (Optional, nanti aja diurusin kalau butuh) */
+.dark {
+  /* Karena defaultnya udah dark (di :root), ini bisa dikosongin atau
+     dibalik logicnya kalau mau defaultnya light. 
+     Untuk sekarang, biarkan :root handle style utama lo. */
+}
 
-  --color-background: rgb(var(--background));
-  --color-foreground: rgb(var(--foreground));
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-lora);
 }
 
-body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.heading {
-  font-family: var(--font-sans);
-  font-weight: 700;
-}
-
-.narrative {
-  font-family: var(--font-serif);
-}
-
-/*  */
-
-.prose p {
-  margin-bottom: 1.25em;
-}
-
-/*  */
-
-.prose.prose-invert {
-  --tw-prose-body: rgb(var(--color-light) / 0.85);
-  --tw-prose-headings: rgb(var(--color-light));
-  --tw-prose-bold: rgb(var(--color-light));
-  --tw-prose-captions: rgb(var(--color-light) / 0.7);
-
-  --tw-prose-links: rgb(var(--color-accent));
-  --tw-prose-quotes: rgb(var(--color-accent));
-  --tw-prose-code: rgb(var(--color-accent));
-
-  --tw-prose-quote-borders: rgb(var(--color-secondary));
-  --tw-prose-bullets: rgb(var(--color-secondary));
-  --tw-prose-hr: rgb(var(--color-light) / 0.2);
+/* Base Styles Refined */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
   
-  --tw-prose-th-borders: rgb(var(--color-light) / 0.3);
-  --tw-prose-td-borders: rgb(var(--color-light) / 0.2);
+  /* Custom Typography Utility Classes */
+  .heading {
+    @apply font-sans font-bold tracking-tight;
+  }
+  .narrative {
+    @apply font-serif;
+  }
 
-  --tw-prose-links-hover: rgb(var(--color-accent) / 0.8);
-}
-
-.prose.prose-invert pre {
-  background-color: rgb(20 20 20 / 0.7);
-  border: 1px solid rgb(var(--color-light) / 0.1);
-  backdrop-filter: blur(4px);
-}
-
-.prose.prose-invert code {
-  background-color: rgb(var(--color-accent) / 0.1);
-  padding: 0.15em 0.3em;
-  border-radius: 0.3em;
-}
-
-.prose.prose-invert code::before,
-.prose.prose-invert code::after {
-  content: none;
+  /* Typography Plugin Overrides (Biar cocok sama Cream text lo) */
+  .prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-links: var(--primary);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-quotes: var(--accent);
+    --tw-prose-code: var(--accent);
+    --tw-prose-hr: var(--border);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--border);
+  }
 }

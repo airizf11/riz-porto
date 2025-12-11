@@ -1,12 +1,12 @@
 // src/app/(public)/page.tsx
 import { Suspense } from "react";
-import { HeroSection } from "@/components/HeroSection";
-import { AboutSection } from "@/components/AboutSection";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { SocialsSection } from "@/components/SocialsSection";
-import { QuoteSection } from "@/components/QuoteSection";
-import { HomeContactSection } from "@/components/HomeContactSection";
-import { Divider } from "@/components/Divider";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { ProjectsSection } from "@/components/sections/ProjectsSection";
+import { SocialsSection } from "@/components/sections/SocialsSection";
+import { QuoteSection } from "@/components/sections/QuoteSection";
+import { HomeContactSection } from "@/components/sections/HomeContactSection";
+import { Divider } from "@/components/common/Divider";
 import { ProjectsSkeleton } from "@/components/ProjectsSkeleton";
 import { QuoteSkeleton } from "@/components/QuoteSkeleton";
 import { getSiteSettings } from "@/lib/data";

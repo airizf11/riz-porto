@@ -11,7 +11,7 @@ if (
   console.error(
     "FATAL ERROR: Missing environment variables for Supabase or Google AI."
   );
-  // throw new Error("Missing environment variables for Supabase or Google AI");
+  throw new Error("Missing environment variables for Supabase or Google AI");
 }
 
 const supabaseAdmin = createClient(

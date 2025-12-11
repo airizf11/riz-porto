@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { ArrowRightLeft } from "lucide-react";
 
+// Tipe data yang diterima dari komponen induk
 interface Coin {
   id: string;
   name: string;
@@ -12,15 +13,20 @@ interface ProfitCalculatorProps {
   coins: Coin[];
   currencies: string[];
   currentPrices: { [key: string]: number | null };
+  initialCoin?: string;
+  initialCurrency?: string;
 }
 
 export function ProfitCalculator({
   coins,
   currencies,
   currentPrices,
+  initialCoin,
+  initialCurrency,
 }: ProfitCalculatorProps) {
-  const [calcCoin, setCalcCoin] = useState("bitcoin");
-  const [calcCurrency, setCalcCurrency] = useState("usd");
+  // State untuk semua input, diinisialisasi dari props jika ada
+  const [calcCoin, setCalcCoin] = useState(initialCoin || "bitcoin");
+  const [calcCurrency, setCalcCurrency] = useState(initialCurrency || "usd");
   const [investment, setInvestment] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
   const [targetPrice, setTargetPrice] = useState("");
@@ -28,6 +34,7 @@ export function ProfitCalculator({
 
   const currentPriceForCalc = currentPrices[calcCoin];
 
+  // Sinkronisasi: Jika input Investment atau Buy Price berubah, update Amount of Coin
   useEffect(() => {
     const inv = parseFloat(investment);
     const buy = parseFloat(buyPrice);
@@ -36,6 +43,7 @@ export function ProfitCalculator({
     }
   }, [investment, buyPrice]);
 
+  // Sinkronisasi: Jika input Amount of Coin atau Buy Price berubah, update Investment
   useEffect(() => {
     const amount = parseFloat(amountOfCoin);
     const buy = parseFloat(buyPrice);
@@ -46,6 +54,7 @@ export function ProfitCalculator({
     }
   }, [amountOfCoin, buyPrice, calcCurrency]);
 
+  // Kalkulasi hasil untung/rugi
   const results = useMemo(() => {
     const amount = parseFloat(amountOfCoin);
     const buy = parseFloat(buyPrice);
@@ -79,6 +88,7 @@ export function ProfitCalculator({
     };
   }, [amountOfCoin, buyPrice, targetPrice, currentPriceForCalc]);
 
+  // Fungsi format mata uang yang andal
   const formatCurrency = (value: number, currency: string) => {
     const isIdr = currency.toLowerCase() === "idr";
     return new Intl.NumberFormat("en-US", {

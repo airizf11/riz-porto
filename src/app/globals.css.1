@@ -1,0 +1,95 @@
+/* src/app/globals.css */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --color-primary: 221 28 26;
+  --color-accent: 240 198 6;
+  --color-secondary: 8 103 136;
+  --color-tertiary: 6 174 213;
+  --color-light: 255 241 208;
+  --color-dark: 28 28 28;
+
+  --background: var(--color-dark);
+  --foreground: var(--color-light);
+
+  --font-inter: "__Inter_Fallback_123", sans-serif;
+  --font-lora: "__Lora_Fallback_456", serif;
+}
+
+@theme {
+  --color-primary: rgb(var(--color-primary));
+  --color-accent: rgb(var(--color-accent));
+  --color-secondary: rgb(var(--color-secondary));
+  --color-tertiary: rgb(var(--color-tertiary));
+  --color-light: rgb(var(--color-light));
+  --color-dark: rgb(var(--color-dark));
+
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-lora);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.heading {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+.narrative {
+  font-family: var(--font-serif);
+}
+
+/*  */
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+/*  */
+
+.prose.prose-invert {
+  --tw-prose-body: rgb(var(--color-light) / 0.85);
+  --tw-prose-headings: rgb(var(--color-light));
+  --tw-prose-bold: rgb(var(--color-light));
+  --tw-prose-captions: rgb(var(--color-light) / 0.7);
+
+  --tw-prose-links: rgb(var(--color-accent));
+  --tw-prose-quotes: rgb(var(--color-accent));
+  --tw-prose-code: rgb(var(--color-accent));
+
+  --tw-prose-quote-borders: rgb(var(--color-secondary));
+  --tw-prose-bullets: rgb(var(--color-secondary));
+  --tw-prose-hr: rgb(var(--color-light) / 0.2);
+  
+  --tw-prose-th-borders: rgb(var(--color-light) / 0.3);
+  --tw-prose-td-borders: rgb(var(--color-light) / 0.2);
+
+  --tw-prose-links-hover: rgb(var(--color-accent) / 0.8);
+}
+
+.prose.prose-invert pre {
+  background-color: rgb(20 20 20 / 0.7);
+  border: 1px solid rgb(var(--color-light) / 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.prose.prose-invert code {
+  background-color: rgb(var(--color-accent) / 0.1);
+  padding: 0.15em 0.3em;
+  border-radius: 0.3em;
+}
+
+.prose.prose-invert code::before,
+.prose.prose-invert code::after {
+  content: none;
+}

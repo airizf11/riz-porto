@@ -1,4 +1,4 @@
-// src/app/contact/actions.ts
+// src/app/(public)/contact/actions.ts
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";

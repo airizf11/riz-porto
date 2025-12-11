@@ -1,11 +1,13 @@
-// src/app/(public)/exp/crypto-page/tracker-client.tsx
+// src/app/(public)/exp/crypto-page/client-page.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { PriceChart } from "./PriceChart";
-import { ProfitCalculator } from "./ProfitCalculator";
 
+// --- PUSAT KONFIGURASI ---
 const COINS = [
   { id: "bitcoin", name: "Bitcoin (BTC)", symbol: "BTC" },
   { id: "ethereum", name: "Ethereum (ETH)", symbol: "ETH" },
@@ -17,56 +19,82 @@ const COINS = [
   { id: "chainlink", name: "Chainlink (LINK)", symbol: "LINK" },
   { id: "the-hype", name: "Hype (HYPE)", symbol: "HYPE" },
 ];
-
 const CURRENCIES = ["usd", "idr", "eur", "jpy", "gbp"];
 const TIME_RANGES = [
+  { value: "1h", label: "1H" },
+  { value: "12h", label: "12H" },
   { value: "1", label: "1D" },
   { value: "7", label: "7D" },
   { value: "30", label: "30D" },
-  { value: "90", label: "90D" },
-  { value: "365", label: "1Y" },
 ];
 
-type InitialData = { initialPrice: number | null; initialChartData: any[] };
+// Tipe data
+type InitialData = { currentPrice: number | null; chartData: any[] };
 type CryptoData = { currentPrice: number | null; chartData: any[] };
 
-export default function CryptoTrackerClient({
+export default function CryptoPageClient({
   initialData,
 }: {
   initialData: InitialData;
 }) {
-  const [selectedCoin, setSelectedCoin] = useState("bitcoin");
-  const [selectedCurrency, setSelectedCurrency] = useState("usd");
-  const [timeRange, setTimeRange] = useState("7");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [data, setData] = useState<CryptoData>({
-    currentPrice: initialData.initialPrice,
-    chartData: initialData.initialChartData,
-  });
+  // Inisialisasi state dari URL, dengan fallback
+  const [selectedCoin, setSelectedCoin] = useState(
+    () => searchParams.get("coin") || "bitcoin"
+  );
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    () => searchParams.get("currency") || "usd"
+  );
+  const [timeRange, setTimeRange] = useState(
+    () => searchParams.get("time") || "30"
+  );
+
+  const [data, setData] = useState<CryptoData>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Effect untuk mengambil data saat state berubah
   useEffect(() => {
+    // Update URL saat state berubah
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("coin", selectedCoin);
+    params.set("currency", selectedCurrency);
+    params.set("time", timeRange);
+    // `router.replace` digunakan untuk update URL tanpa menambah histori browser
+    router.replace(`${pathname}?${params.toString()}`);
+
     async function fetchData() {
       setIsLoading(true);
       setError(null);
       try {
-        const params = new URLSearchParams({
+        // Untuk pilihan jam, kita tetap request data 1 hari
+        const days = ["1h", "12h"].includes(timeRange) ? "1" : timeRange;
+        const apiParams = new URLSearchParams({
           coin: selectedCoin,
           currency: selectedCurrency,
-          days: timeRange,
+          days,
         });
-        const response = await fetch(`/api/crypto?${params.toString()}`);
+        const response = await fetch(`/api/crypto?${apiParams.toString()}`);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to fetch data from API.");
-        }
+        if (!response.ok)
+          throw new Error((await response.json()).error || "API Error");
+
         const fetchedData = await response.json();
-        setData({
-          currentPrice: fetchedData.currentPrice,
-          chartData: fetchedData.chartData,
-        });
+
+        // Filter data chart untuk pilihan jam
+        if (timeRange.endsWith("h")) {
+          const hours = parseInt(timeRange.replace("h", ""));
+          const now = Date.now();
+          const startTime = now - hours * 60 * 60 * 1000;
+          fetchedData.chartData = fetchedData.chartData.filter(
+            (d: any) => d.timestamp >= startTime
+          );
+        }
+
+        setData(fetchedData);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -74,27 +102,42 @@ export default function CryptoTrackerClient({
       }
     }
     fetchData();
-  }, [selectedCoin, selectedCurrency, timeRange]);
+  }, [
+    selectedCoin,
+    selectedCurrency,
+    timeRange,
+    router,
+    pathname,
+    searchParams,
+  ]);
 
   const currentCoinInfo = useMemo(
     () => COINS.find((c) => c.id === selectedCoin),
     [selectedCoin]
   );
 
-  const formattedPrice = useMemo(() => {
-    if (data.currentPrice === null) return "...";
-    const isIdr = selectedCurrency.toLowerCase() === "idr";
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: selectedCurrency.toUpperCase(),
-      minimumFractionDigits: isIdr ? 0 : 2,
-      maximumFractionDigits: isIdr ? 0 : 8,
-    }).format(data.currentPrice);
-  }, [data.currentPrice, selectedCurrency]);
+  // Effect untuk update judul halaman (SEO)
+  useEffect(() => {
+    if (currentCoinInfo && data.currentPrice) {
+      const formattedPrice = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: selectedCurrency.toUpperCase(),
+      }).format(data.currentPrice);
+      document.title = `${currentCoinInfo.name} ${formattedPrice} | Riziyan's Tracker`;
+    }
+  }, [currentCoinInfo, selectedCurrency, data.currentPrice]);
 
   return (
-    <div>
-      {/* Kontrol UI */}
+    <>
+      <div className="text-center mb-8">
+        <h1 className="heading text-4xl md:text-6xl text-accent mb-4">
+          {currentCoinInfo?.name || "Crypto Tracker"}
+        </h1>
+        <p className="narrative text-xl text-light/80">
+          Live price charts and simulator.
+        </p>
+      </div>
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 mb-8 bg-dark/50 rounded-lg border border-light/10">
         <div>
           <label className="text-xs text-light/70 block mb-1">Coin</label>
@@ -144,30 +187,25 @@ export default function CryptoTrackerClient({
         </div>
       </div>
 
-      {/* Tampilan Utama (Chart & Harga) */}
       <div className="p-6 bg-dark/70 rounded-xl border border-light/10 min-h-[32rem] flex flex-col justify-center">
         {isLoading ? (
-          <div className="text-center text-light/70">Loading new data...</div>
+          <div className="text-center text-light/70">Loading chart data...</div>
         ) : error ? (
           <div className="text-center text-red-400">Error: {error}</div>
         ) : (
-          <>
-            <div className="mb-6 px-4">
-              <h2 className="text-2xl text-light/80">
-                {currentCoinInfo?.name}
-              </h2>
-              <p className="text-5xl font-bold text-accent">{formattedPrice}</p>
-            </div>
-            <PriceChart data={data.chartData} currency={selectedCurrency} />
-          </>
+          <PriceChart data={data.chartData} currency={selectedCurrency} />
         )}
       </div>
 
-      <ProfitCalculator
-        coins={COINS}
-        currencies={CURRENCIES}
-        currentPrices={{ [selectedCoin]: data.currentPrice }}
-      />
-    </div>
+      <Link
+        href={{
+          pathname: "/exp/crypto-page/calc",
+          query: { coin: selectedCoin, currency: selectedCurrency },
+        }}
+        className="block text-center mt-8 text-secondary hover:text-accent transition-colors font-semibold"
+      >
+        Go to Profit & Loss Simulator →
+      </Link>
+    </>
   );
 }

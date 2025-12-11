@@ -1,6 +1,9 @@
 // src/components/ContactInfo.tsx
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Mail, Phone } from "lucide-react";
+import {
+  Mail,
+  // Phone
+} from "lucide-react";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 const contactLinks = [
