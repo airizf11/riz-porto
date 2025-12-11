@@ -51,7 +51,7 @@ export async function getGroupedSocialLinks() {
     }
 
     group.links.push({
-      icon: link.icon_id ? iconMap[link.icon_id] : null,
+      // icon: link.icon_id ? iconMap[link.icon_id] : null,
       name: link.name,
       desc: link.description || "",
       url: link.url,
