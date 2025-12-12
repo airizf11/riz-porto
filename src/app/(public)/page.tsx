@@ -9,7 +9,7 @@ import { HomeContactSection } from "@/components/sections/HomeContactSection";
 import { Divider } from "@/components/common/Divider";
 import { ProjectsSkeleton } from "@/components/ProjectsSkeleton";
 import { QuoteSkeleton } from "@/components/QuoteSkeleton";
-import { getSiteSettings } from "@/lib/data";
+import { getSiteSettings } from "@/services/content";
 
 export default async function HomePage() {
   const settings = await getSiteSettings();

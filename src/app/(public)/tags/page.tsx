@@ -1,109 +1,142 @@
 // src/app/(public)/tags/page.tsx
-import { createClient } from "@/lib/supabase/server";
-import { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  // Tag,
-  Cpu,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowLeft, Cpu, Hash, Tag as TagIcon } from "lucide-react";
+import { Metadata } from "next";
+
+// Services & Components
+import { getAllTags } from "@/services/content";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "All Tags ",
-  description:
-    "Explore all topics, concepts, and technologies discussed on my personal site.",
+  title: "Explore Tags",
+  description: "Browse content by specific technologies, topics, and concepts.",
 };
 
-async function getAllTagsWithCount() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("tags")
-    .select("*, content_tags(count)");
-
-  if (error) {
-    console.error("Error fetching tags with count:", error);
-    return [];
-  }
-  return data;
-}
-
 export default async function TagsPage() {
-  const tags = await getAllTagsWithCount();
+  const tags = await getAllTags();
 
+  // Pisahkan Tech vs Topic
   const techTags = tags
     .filter((tag) => tag.tag_type === "tech")
-    .sort(
-      (a, b) =>
-        (b.content_tags[0]?.count || 0) - (a.content_tags[0]?.count || 0)
-    );
+    .sort((a, b) => b.count - a.count); // Urutkan yang paling banyak kontennya
+
   const topicTags = tags
     .filter((tag) => tag.tag_type === "topic")
-    .sort(
-      (a, b) =>
-        (b.content_tags[0]?.count || 0) - (a.content_tags[0]?.count || 0)
-    );
+    .sort((a, b) => b.count - a.count);
 
   return (
-    <main className="min-h-screen bg-dark text-light">
-      <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
+    <main className="min-h-screen bg-background text-foreground">
+      <div className="container mx-auto max-w-5xl px-4 py-12 md:py-20">
+        {/* Navigation Header */}
+        <div className="mb-12">
+          <Button
+            variant="ghost"
+            className="pl-0 hover:pl-2 transition-all"
+            asChild
+          >
+            <Link
+              href="/"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Home
+            </Link>
+          </Button>
+        </div>
+
+        {/* Page Title */}
         <div className="text-center mb-16">
-          <h1 className="heading text-4xl md:text-6xl text-primary mb-8">
-            Explore by Tag
+          <div className="inline-flex items-center justify-center p-3 mb-6 bg-primary/10 rounded-full border border-primary/20">
+            <TagIcon className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="heading text-4xl md:text-6xl font-bold text-foreground mb-6">
+            Explore by <span className="text-primary">Tag</span>
           </h1>
-          <p className="narrative text-xl text-light/80">
-            Find content based on specific topics and technologies.
+          <p className="narrative text-xl text-muted-foreground max-w-2xl mx-auto">
+            Dive into specific topics. From coding languages to abstract ideas.
           </p>
         </div>
 
-        <section className="mb-16">
-          <h2 className="heading text-3xl mb-8 border-l-4 border-secondary pl-4 flex items-center gap-3">
-            <Cpu className="w-8 h-8 text-secondary" />
-            Technologies
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            {techTags.map((tag) => (
-              <Link
-                href={`/tags/${tag.slug}`}
-                key={tag.id}
-                className="block bg-dark/50 border border-light/10 rounded-lg px-4 py-2 text-light hover:bg-secondary/20 hover:border-secondary/50 transition-all transform hover:scale-105"
-              >
-                <span className="font-semibold">{tag.name}</span>
-                <span className="ml-2 text-xs bg-secondary text-dark rounded-full px-2 py-0.5">
-                  {tag.content_tags[0]?.count || 0}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <div className="space-y-16">
+          {/* SECTION 1: Technologies */}
+          <section>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2 bg-secondary/10 rounded-lg">
+                <Cpu className="w-6 h-6 text-secondary" />
+              </div>
+              <h2 className="text-2xl font-bold text-foreground">
+                Technologies & Tools
+              </h2>
+            </div>
 
-        <section>
-          <h2 className="heading text-3xl mb-8 border-l-4 border-accent pl-4 flex items-center gap-3">
-            <MessageSquare className="w-8 h-8 text-accent" />
-            Topics & Concepts
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            {topicTags.map((tag) => (
-              <Link
-                href={`/tags/${tag.slug}`}
-                key={tag.id}
-                className="block bg-dark/50 border border-light/10 rounded-lg px-4 py-2 text-light hover:bg-accent/20 hover:border-accent/50 transition-all transform hover:scale-105"
-              >
-                <span className="font-semibold">{tag.name}</span>
-                <span className="ml-2 text-xs bg-accent text-dark rounded-full px-2 py-0.5">
-                  {tag.content_tags[0]?.count || 0}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
+            <div className="flex flex-wrap gap-3">
+              {techTags.length > 0 ? (
+                techTags.map((tag) => (
+                  <Link
+                    href={`/tags/${tag.slug}`}
+                    key={tag.id}
+                    className="group"
+                  >
+                    <Badge
+                      variant="secondary"
+                      className="text-base py-2 px-4 hover:bg-secondary hover:text-secondary-foreground transition-all cursor-pointer border border-transparent hover:border-secondary/50 hover:shadow-lg hover:shadow-secondary/20"
+                    >
+                      {tag.name}
+                      <span className="ml-2 text-xs opacity-60 bg-background/20 px-1.5 py-0.5 rounded-full">
+                        {tag.count}
+                      </span>
+                    </Badge>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-muted-foreground italic">
+                  No tech tags found.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <Separator className="bg-border/60" />
+
+          {/* SECTION 2: Topics */}
+          <section>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <Hash className="w-6 h-6 text-accent" />
+              </div>
+              <h2 className="text-2xl font-bold text-foreground">
+                Topics & Concepts
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {topicTags.length > 0 ? (
+                topicTags.map((tag) => (
+                  <Link
+                    href={`/tags/${tag.slug}`}
+                    key={tag.id}
+                    className="group"
+                  >
+                    <Badge
+                      variant="outline"
+                      className="text-base py-2 px-4 hover:bg-accent hover:text-accent-foreground border-accent/30 transition-all cursor-pointer hover:shadow-lg hover:shadow-accent/20"
+                    >
+                      {tag.name}
+                      <span className="ml-2 text-xs opacity-60 bg-foreground/10 px-1.5 py-0.5 rounded-full">
+                        {tag.count}
+                      </span>
+                    </Badge>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-muted-foreground italic">
+                  No topic tags found.
+                </p>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
     </main>
   );

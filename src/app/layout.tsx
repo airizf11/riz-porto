@@ -4,7 +4,7 @@ import { Inter, Lora } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { constructMetadata } from "@/lib/metadata";
+import { constructMetadata } from "@/lib/utils";
 
 const inter = Inter({
   subsets: ["latin"],

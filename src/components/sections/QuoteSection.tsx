@@ -1,5 +1,5 @@
 // src/components/sections/QuoteSection.tsx
-import { getPublishedQuotes } from "@/lib/data";
+import { getPublishedQuotes } from "@/services/content";
 import { QuoteClient } from "./QuoteClient";
 
 export const QuoteSection = async () => {

@@ -1,0 +1,9 @@
+// src/types/index.ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
+interface MetadataProps {
+  title?: string;
+  description?: string;
+  image?: string;
+  icons?: string;
+  noIndex?: boolean;
+}

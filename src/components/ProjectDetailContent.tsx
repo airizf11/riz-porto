@@ -4,19 +4,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { ExternalLink, Github } from "lucide-react";
-import { TechStackItem } from "./TechStackItem";
-import type { Database } from "@/types/supabase";
-
-type Project = Database["public"]["Tables"]["projects"]["Row"];
+import { ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa6";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { MarkdownRenderer } from "./MarkdownRenderer";
+import type { Project } from "@/services/projects";
 
 interface ProjectDetailContentProps {
   project: Project;
 }
 
 export function ProjectDetailContent({ project }: ProjectDetailContentProps) {
+  // Service kita udah return stack sebagai string "React, Next.js", jadi aman di-split
   const stackArray = project.stack
     ? project.stack.split(",").map((s) => s.trim())
     : [];
@@ -27,104 +27,136 @@ export function ProjectDetailContent({ project }: ProjectDetailContentProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeInOut" }}
     >
-      <div className="mb-8 text-sm text-light/60">
-        <Link href="/" className="hover:text-light transition-colors">
+      {/* Breadcrumb Navigation */}
+      <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/" className="hover:text-primary transition-colors">
           Home
         </Link>
-        <span className="mx-2">/</span>
-        <Link href="/projects" className="hover:text-light transition-colors">
+        <span>/</span>
+        <Link href="/projects" className="hover:text-primary transition-colors">
           Projects
         </Link>
-        <span className="mx-2">/</span>
-        <span className="text-light font-semibold">{project.name}</span>
+        <span>/</span>
+        <span className="text-foreground font-semibold truncate max-w-[200px]">
+          {project.name}
+        </span>
       </div>
 
+      {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="heading text-4xl md:text-6xl text-accent mb-4">
+        <h1 className="heading text-4xl md:text-6xl font-bold text-foreground mb-4">
           {project.name}
         </h1>
-        <p className="narrative text-xl text-light/80">{project.description}</p>
+        <p className="narrative text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          {project.description}
+        </p>
       </div>
 
+      {/* Featured Image */}
       {project.image_url && (
         <motion.div
-          className="relative aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-light/10 mb-12"
-          whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+          className="relative aspect-video w-full rounded-xl overflow-hidden shadow-2xl border border-border/50 bg-muted mb-16"
+          whileHover={{ scale: 1.01, transition: { duration: 0.4 } }}
         >
           <Image
             src={project.image_url}
             alt={`Preview of ${project.name}`}
             fill
-            sizes="(max-width: 768px) 100vw, 896px"
+            sizes="(max-width: 1200px) 100vw, 1200px"
             className="object-cover"
             priority
           />
         </motion.div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-        <div className="md:col-span-2">
-          <h2 className="heading text-2xl text-secondary mb-4 border-l-4 border-secondary pl-4">
-            About This Project
-          </h2>
-          <article className="prose prose-invert prose-lg max-w-none text-light/90">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {project.case_study ||
-                "Detail studi kasus untuk proyek ini akan segera ditambahkan."}
-            </ReactMarkdown>
-          </article>
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Main Content (Left) */}
+        <div className="lg:col-span-2">
+          <div className="flex items-center gap-4 mb-6 pb-4 border-b border-border">
+            <h2 className="heading text-2xl font-bold text-secondary">
+              Case Study
+            </h2>
+          </div>
+
+          <div className="prose prose-lg prose-invert max-w-none text-muted-foreground">
+            {/* Menggunakan 'project.content' bukan 'case_study' */}
+            <MarkdownRenderer
+              content={project.content || "Case study content is coming soon."}
+            />
+          </div>
         </div>
 
-        <div className="md:col-span-1">
-          <aside className="sticky top-24 flex flex-col gap-8 p-6 bg-dark/70 backdrop-blur-sm border border-light/10 rounded-xl">
+        {/* Sidebar (Right) */}
+        <aside className="lg:col-span-1">
+          <div className="sticky top-24 flex flex-col gap-8 p-6 bg-card/50 backdrop-blur-sm border border-border rounded-xl shadow-sm">
+            {/* Tech Stack */}
             <div>
-              <h3 className="heading text-2xl text-secondary mb-4">
+              <h3 className="heading text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                 Tech Stack
               </h3>
-              <ul className="flex flex-col gap-3">
+              <div className="flex flex-wrap gap-2">
                 {stackArray.length > 0 ? (
                   stackArray.map((tech) => (
-                    <TechStackItem key={tech} name={tech} />
+                    <Badge
+                      key={tech}
+                      variant="secondary"
+                      className="px-3 py-1 text-sm"
+                    >
+                      {tech}
+                    </Badge>
                   ))
                 ) : (
-                  <p className="text-light/50 italic">
-                    Tech stack not specified.
+                  <p className="text-sm text-muted-foreground italic">
+                    Not specified.
                   </p>
                 )}
-              </ul>
+              </div>
             </div>
 
+            {/* Action Links */}
             {(project.live_url || project.repo_url) && (
-              <div>
-                <h3 className="heading text-2xl text-secondary mt-6 mb-4">
-                  Links
+              <div className="space-y-4 pt-4 border-t border-border">
+                <h3 className="heading text-lg font-bold text-foreground mb-2">
+                  Project Links
                 </h3>
-                <div className="flex flex-col gap-3">
-                  {project.live_url && (
+
+                {project.live_url && (
+                  <Button
+                    asChild
+                    className="w-full rounded-lg font-bold"
+                    size="lg"
+                  >
                     <a
                       href={project.live_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-dark font-bold rounded-lg transition-transform hover:scale-105 active:scale-95"
                     >
-                      <ExternalLink className="w-4 h-4" /> Live Demo
+                      <ExternalLink className="w-4 h-4 mr-2" /> Live Demo
                     </a>
-                  )}
-                  {project.repo_url && (
+                  </Button>
+                )}
+
+                {project.repo_url && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full rounded-lg"
+                    size="lg"
+                  >
                     <a
                       href={project.repo_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3 border-2 border-light/50 text-light font-bold rounded-lg transition-colors hover:bg-light/10 active:bg-light/20"
                     >
-                      <Github className="w-4 h-4" /> Source Code
+                      <FaGithub className="w-4 h-4 mr-2" /> Source Code
                     </a>
-                  )}
-                </div>
+                  </Button>
+                )}
               </div>
             )}
-          </aside>
-        </div>
+          </div>
+        </aside>
       </div>
     </motion.div>
   );

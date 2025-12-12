@@ -1,92 +1,75 @@
 // src/app/(public)/articles/page.tsx
-import { createClient } from "@/lib/supabase/server";
-import { Metadata } from "next";
 import Link from "next/link";
-import { Calendar, ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowLeft, PenTool } from "lucide-react";
+import { Metadata } from "next";
+
+// Services & Components
+import { getAllArticles } from "@/services/content";
+import { ContentItemCard } from "@/components/ContentItemCard";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "All Articles ",
+  title: "All Articles",
   description:
     "A collection of articles on technology, development, and personal insights.",
 };
-
-async function getAllArticles() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("content_items")
-    .select("id, title, slug, excerpt, created_at")
-    .eq("status", "published")
-    .eq("content_type", "article")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Error fetching articles:", error);
-    return [];
-  }
-  return data;
-}
 
 export default async function ArticlesPage() {
   const allArticles = await getAllArticles();
 
   return (
-    <main className="min-h-screen bg-dark text-light">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
+        {/* Navigation Header */}
+        <div className="mb-12">
+          <Button
+            variant="ghost"
+            className="pl-0 hover:pl-2 transition-all"
+            asChild
+          >
+            <Link
+              href="/"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Home
+            </Link>
+          </Button>
+        </div>
+
+        {/* Page Title */}
         <div className="text-center mb-16">
-          <h1 className="heading text-4xl md:text-6xl text-secondary mb-8">
-            Articles
+          <h1 className="heading text-4xl md:text-6xl font-bold text-foreground mb-6">
+            Writing & <span className="text-primary">Thoughts</span>
           </h1>
-          <p className="narrative text-xl text-light/80">
-            Insights and tutorials from my journey in tech and beyond.
+          <p className="narrative text-xl text-muted-foreground max-w-2xl mx-auto">
+            Insights, tutorials, and stories from my journey in tech and beyond.
           </p>
         </div>
 
-        <div className="space-y-10">
-          {allArticles.length > 0 ? (
-            allArticles.map((article) => (
-              <Link
-                href={`/articles/${article.slug}`}
-                key={article.id}
-                className="block group"
-              >
-                <article className="p-6 rounded-xl transition-all border-2 border-transparent group-hover:border-secondary/30 group-hover:bg-dark/50">
-                  <header>
-                    <h2 className="heading text-3xl text-light group-hover:text-secondary transition-colors">
-                      {article.title}
-                    </h2>
-                    <div className="flex items-center gap-2 text-sm text-light/50 mt-2">
-                      <Calendar className="w-4 h-4" />
-                      <time dateTime={article.created_at}>
-                        {new Date(article.created_at).toLocaleDateString(
-                          "en-US",
-                          { year: "numeric", month: "long", day: "numeric" }
-                        )}
-                      </time>
-                    </div>
-                  </header>
-                  <p className="narrative text-light/80 mt-4">
-                    {article.excerpt}
-                  </p>
-                  <div className="inline-flex items-center gap-2 mt-4 font-semibold text-secondary">
-                    Read more
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </article>
-              </Link>
-            ))
-          ) : (
-            <p className="text-center text-light/70">
-              No articles published yet. The ink is still drying!
+        {/* Articles Grid */}
+        {allArticles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {allArticles.map((article) => (
+              <div key={article.id} className="h-full">
+                {/* Card otomatis handle styling & link */}
+                <ContentItemCard item={article} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-border rounded-2xl bg-muted/20">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <PenTool className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">
+              No Articles Yet
+            </h3>
+            <p className="text-muted-foreground mt-2 max-w-md">
+              The ink is still drying. Check back soon for new content!
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </main>
   );

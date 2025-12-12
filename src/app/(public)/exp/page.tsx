@@ -1,76 +1,78 @@
 // src/app/(public)/exp/page.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient } from "@/lib/supabase/server";
-import { Metadata } from "next";
-import { ExperimentCard } from "@/components/ExperimentCard";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FlaskConical } from "lucide-react";
+import { Metadata } from "next";
+
+// Services & Components
+import { getExperiments } from "@/services/content";
+import { ContentItemCard } from "@/components/ContentItemCard";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "The Lab of Riziyan's Experiments ",
+  title: "The Lab | Riziyan's Experiments",
   description:
     "A digital playground for exploring new technologies, ideas, creative projects and more.",
 };
-
-async function getExperiments() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("content_items")
-    .select(
-      `
-        id, title, slug, excerpt, cover_image_url, 
-        content_tags(tags(name, slug, tag_type))
-    `
-    )
-    .eq("content_type", "experiment")
-    .eq("status", "published")
-    .order("order_index", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching experiments:", error.message);
-    return [];
-  }
-
-  return data.map((item) => ({
-    ...item,
-    tags: item.content_tags.map((ct: any) => ct.tags),
-  }));
-}
 
 export default async function ExperimentsPage() {
   const experiments = await getExperiments();
 
   return (
-    <main className="min-h-screen bg-dark text-light">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
-        <Link
-          href="/"
-          className="group inline-flex items-center gap-2 text-light/70 hover:text-light mb-12 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
-        <header className="text-center mb-16">
-          <h1 className="heading text-6xl md:text-6xl text-accent mb-8">
-            My Experiment Laboratory
-          </h1>
-          <p className="narrative text-xl text-light/80 max-w-3xl mx-auto">
-            Welcome to my digital playground. This is where I experiment with
-            new technologies, build fun utilities, explore creative ideas and
-            more things.
-          </p>
-        </header>
+        {/* Navigation Header */}
+        <div className="mb-12">
+          <Button
+            variant="ghost"
+            className="pl-0 hover:pl-2 transition-all"
+            asChild
+          >
+            <Link
+              href="/"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Home
+            </Link>
+          </Button>
+        </div>
 
+        {/* Page Title */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center justify-center p-3 mb-6 bg-accent/10 rounded-full border border-accent/20">
+            <FlaskConical className="w-8 h-8 text-accent" />
+          </div>
+          <h1 className="heading text-4xl md:text-6xl font-bold text-foreground mb-6">
+            The <span className="text-accent">Laboratory</span>
+          </h1>
+          <p className="narrative text-xl text-muted-foreground max-w-2xl mx-auto">
+            Welcome to my digital playground. Expect bugs, broken layouts, and
+            wild ideas.
+          </p>
+        </div>
+
+        {/* Experiments Grid */}
         {experiments.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {experiments.map((exp) => (
-              <ExperimentCard key={exp.id} experiment={exp} />
+              <div key={exp.id} className="h-full">
+                {/* 
+                  ContentItemCard akan otomatis mendeteksi tipe 'experiment'
+                  dan menampilkan ikon FlaskConical warna Amber.
+                */}
+                <ContentItemCard item={exp} />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-light/70 text-lg">
-              The lab is currently empty. Check back soon for new experiments!
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-border rounded-2xl bg-muted/20">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <FlaskConical className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground">Lab is Empty</h3>
+            <p className="text-muted-foreground mt-2 max-w-md">
+              The scientists are currently on break. Check back later for new
+              experiments!
             </p>
           </div>
         )}

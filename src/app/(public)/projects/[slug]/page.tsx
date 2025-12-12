@@ -1,9 +1,10 @@
 // src/app/(public)/projects/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { constructMetadata } from "@/lib/metadata";
-import { getProjectBySlug } from "@/lib/data";
+import { constructMetadata } from "@/lib/utils";
+// import { getProjectBySlug } from "@/lib/data";
 import { ProjectDetailContent } from "@/components/ProjectDetailContent";
+import { getProjectBySlug } from "@/services/projects";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -13,13 +14,7 @@ export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const slug = resolvedParams?.slug;
-
-  if (!slug) {
-    return constructMetadata({ title: "Project Not Found" });
-  }
-
-  const project = await getProjectBySlug(slug);
+  const project = await getProjectBySlug(resolvedParams.slug);
 
   if (!project) {
     return constructMetadata({ title: "Project Not Found", noIndex: true });
@@ -34,18 +29,15 @@ export async function generateMetadata({
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   const resolvedParams = await params;
-  const slug = resolvedParams?.slug;
 
-  if (!slug) {
-    notFound();
-  }
-
-  const project = await getProjectBySlug(slug);
+  // Fetch Data (Logic query & mapping udah diurus service)
+  const project = await getProjectBySlug(resolvedParams.slug);
 
   if (!project) {
     notFound();
   }
 
+  // Schema Markup for SEO
   const ProjectSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -54,19 +46,17 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     author: {
       "@type": "Person",
       name: "Riziyan",
-      url: "https://akuriziyan.vercel.app",
     },
     description: project.description,
   };
 
   return (
-    <main className="min-h-screen bg-dark text-light">
+    <main className="min-h-screen bg-background text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(ProjectSchema) }}
       />
-
-      <div className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
+      <div className="container mx-auto max-w-5xl px-4 py-12 md:py-20">
         <ProjectDetailContent project={project} />
       </div>
     </main>

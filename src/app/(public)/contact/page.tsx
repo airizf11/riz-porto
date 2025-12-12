@@ -1,124 +1,107 @@
 // src/app/(public)/contact/page.tsx
 /* eslint-disable react/no-unescaped-entities */
-"use client";
-
-import { useFormState, useFormStatus } from "react-dom";
-import { submitContactForm } from "./actions";
-import { ContactInfo } from "@/components/ContactInfo";
 import Link from "next/link";
+import { ArrowLeft, Mail, MapPin, MessageSquare } from "lucide-react";
+import { Metadata } from "next";
 
-const initialState = {
-  message: "",
-  errors: {},
-  success: undefined,
+import { Button } from "@/components/ui/button";
+import { ContactForm } from "@/components/ContactForm";
+import { Separator } from "@/components/ui/separator";
+
+export const metadata: Metadata = {
+  title: "Contact Me ",
+  description: "Get in touch for projects, collaborations, or just to say hi.",
 };
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full px-6 py-3 bg-primary text-dark font-bold rounded-lg transition-transform hover:scale-105 active:scale-95 disabled:bg-primary/50 disabled:cursor-not-allowed"
-    >
-      {pending ? "Sending..." : "Send Message"}
-    </button>
-  );
-}
-
 export default function ContactPage() {
-  const [state, formAction] = useFormState(submitContactForm, initialState);
-
-  if (state.success) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center p-8">
-        <h1 className="heading text-6xl text-accent mb-4">Thank You!</h1>
-        <p className="text-xl text-light/80">{state.message}</p>
-        <Link
-          href="/"
-          className="mt-8 px-5 py-2 border-2 border-light/50 text-light font-bold rounded-lg transition-colors hover:bg-light/10"
-        >
-          ← Back to Home
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <div className="w-full max-w-6xl">
-        <Link
-          href="/"
-          className="text-light/70 hover:text-light mb-8 inline-block"
-        >
-          ← Back to Home
-        </Link>
-        <h1 className="heading text-5xl md:text-6xl text-center mb-4">
-          Let's <span className="text-secondary">Connect</span>
-        </h1>
-        <p className="text-center text-light/70 mb-12">
-          Have a project in mind or just want to say hi? Fill out the form
-          below.
-        </p>
-        <form action={formAction} className="flex flex-col gap-6">
-          <div>
-            <label htmlFor="name" className="sr-only">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Your Name"
-              className="w-full p-4 bg-dark/50 border-2 border-light/20 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all"
-            />
-            {state.errors?.name && (
-              <p className="text-red-400 text-sm mt-1">
-                {state.errors.name[0]}
+    <main className="min-h-screen bg-background text-foreground relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
+
+      <div className="container mx-auto max-w-6xl px-4 py-12 md:py-20 relative z-10">
+        {/* Navigation */}
+        <div className="mb-12">
+          <Button
+            variant="ghost"
+            className="pl-0 hover:pl-2 transition-all"
+            asChild
+          >
+            <Link
+              href="/"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back to Home
+            </Link>
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          {/* LEFT COLUMN: Context & Info */}
+          <div className="space-y-8">
+            <div>
+              <div className="inline-flex items-center justify-center p-3 mb-6 bg-primary/10 rounded-full border border-primary/20">
+                <MessageSquare className="w-6 h-6 text-primary" />
+              </div>
+              <h1 className="heading text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+                Let's start a <br />
+                <span className="text-primary">Conversation.</span>
+              </h1>
+              <p className="narrative text-xl text-muted-foreground leading-relaxed">
+                Have a project in mind, a question about my work, or just want
+                to connect? I'm currently open for new opportunities and
+                collaborations.
               </p>
-            )}
+            </div>
+
+            <Separator className="bg-border/60" />
+
+            <div className="space-y-6">
+              {/* Email Direct */}
+              <div className="flex items-start gap-4">
+                <div className="p-2 bg-muted rounded-lg shrink-0">
+                  <Mail className="w-5 h-5 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">Email Me</h3>
+                  <a
+                    href="mailto:rizian.business99@gmail.com"
+                    className="text-muted-foreground hover:text-primary transition-colors block mt-1"
+                  >
+                    rizian.business99@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              {/* Location / Status */}
+              <div className="flex items-start gap-4">
+                <div className="p-2 bg-muted rounded-lg shrink-0">
+                  <MapPin className="w-5 h-5 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-foreground">Current Status</h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      Available for work
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <label htmlFor="email" className="sr-only">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Your Email"
-              className="w-full p-4 bg-dark/50 border-2 border-light/20 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all"
-            />
-            {state.errors?.email && (
-              <p className="text-red-400 text-sm mt-1">
-                {state.errors.email[0]}
-              </p>
-            )}
+
+          {/* RIGHT COLUMN: Interactive Form */}
+          <div className="lg:mt-8">
+            {/* Form Logic dipisah ke Client Component biar page ini tetep Server Component (SEO Friendly) */}
+            <ContactForm />
           </div>
-          <div>
-            <label htmlFor="message" className="sr-only">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows={5}
-              placeholder="Your Message"
-              className="w-full p-4 bg-dark/50 border-2 border-light/20 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all"
-            ></textarea>
-            {state.errors?.message && (
-              <p className="text-red-400 text-sm mt-1">
-                {state.errors.message[0]}
-              </p>
-            )}
-          </div>
-          <SubmitButton />
-          {state.message && !state.success && (
-            <p className="text-red-400 text-sm text-center">{state.message}</p>
-          )}
-        </form>
-        <ContactInfo />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

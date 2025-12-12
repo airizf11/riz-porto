@@ -1,5 +1,5 @@
 // src/components/sections/AboutSection.tsx
-import { getSiteSettings } from "@/lib/data";
+import { getSiteSettings } from "@/services/content";
 import { AboutClient } from "./AboutClient";
 
 export const AboutSection = async () => {

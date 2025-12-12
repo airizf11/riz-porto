@@ -3,39 +3,11 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ExternalLink, Globe } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  FaGithub,
-  FaLinkedin,
-  FaInstagram,
-  FaTiktok,
-  FaYoutube,
-  FaXTwitter,
-  FaDiscord,
-  FaMedium,
-  FaDribbble,
-} from "react-icons/fa6";
-
-// --- SMART ICON LOGIC ---
-// Fungsi ini jalan di browser, jadi aman 100%
-const getIconForUrl = (url: string) => {
-  const u = url.toLowerCase();
-  if (u.includes("github")) return FaGithub;
-  if (u.includes("linkedin")) return FaLinkedin;
-  if (u.includes("instagram")) return FaInstagram;
-  if (u.includes("tiktok")) return FaTiktok;
-  if (u.includes("youtube") || u.includes("youtu.be")) return FaYoutube;
-  if (u.includes("twitter") || u.includes("x.com")) return FaXTwitter;
-  if (u.includes("discord")) return FaDiscord;
-  if (u.includes("medium")) return FaMedium;
-  if (u.includes("dribbble")) return FaDribbble;
-
-  // Default Icon kalau link tidak dikenali
-  return Globe;
-};
+import { SmartIcon } from "@/components/ui/smart-icon";
 
 interface SocialLink {
   name: string;
@@ -95,8 +67,8 @@ export const SocialsClient = ({
               {/* Category Header */}
               <div className="flex items-center gap-4 mb-8">
                 {/* 
-                   NOTE: Logic replace color ini agak risky kalau Tailwind v4 ga detect classnya.
-                   Pastikan di globals.css atau safelist ada class bg-primary, bg-secondary dll.
+                   NOTE: Pastikan class utility (bg-primary, bg-secondary, text-pink-500, dll)
+                   ter-safelist jika menggunakan dynamic class seperti di bawah ini.
                 */}
                 <div
                   className={cn(
@@ -113,9 +85,6 @@ export const SocialsClient = ({
               {/* Grid Links */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {group.links.map((link) => {
-                  // AUTO DETECT ICON
-                  const Icon = getIconForUrl(link.url);
-
                   return (
                     <a
                       href={link.url}
@@ -136,7 +105,11 @@ export const SocialsClient = ({
                             />
                           ) : (
                             <div className="w-full h-full bg-secondary/5 flex items-center justify-center">
-                              <Icon className="w-12 h-12 text-muted-foreground/20" />
+                              {/* UPDATE: Menggunakan SmartIcon (Ukuran Besar) */}
+                              <SmartIcon
+                                url={link.url}
+                                className="w-12 h-12 text-muted-foreground/20"
+                              />
                             </div>
                           )}
 
@@ -160,7 +133,8 @@ export const SocialsClient = ({
                                 group.color
                               )}
                             >
-                              <Icon className="w-5 h-5" />
+                              {/* UPDATE: Menggunakan SmartIcon (Ukuran Kecil) */}
+                              <SmartIcon url={link.url} className="w-5 h-5" />
                             </div>
                             <h4 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
                               {link.name}

@@ -1,135 +1,183 @@
 // src/app/(public)/articles/[slug]/page.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+import { CalendarDays, ArrowLeft, Hash } from "lucide-react";
+
+// Services & Utils
+import { getContentBySlug } from "@/services/content";
+import { constructMetadata } from "@/lib/utils";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
-import { Calendar, Hash } from "lucide-react";
-import type { Database } from "@/types/supabase";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
-type ArticleWithTags = Database["public"]["Tables"]["content_items"]["Row"] & {
-  tags: Database["public"]["Tables"]["tags"]["Row"][] | null;
-};
-
+// 1. Generate Metadata SEO
 export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const article = await getArticleBySlug(resolvedParams.slug);
+  // Fetch spesifik tipe 'article'
+  const article = await getContentBySlug(resolvedParams.slug, "article");
 
-  if (!article) return { title: "Article Not Found" };
+  if (!article) {
+    return constructMetadata({ title: "Article Not Found", noIndex: true });
+  }
 
-  return {
-    title: `${article.title} | Riziyan's Blog`,
+  return constructMetadata({
+    title: article.title,
     description: article.excerpt,
-    openGraph: {
-      title: article.title ?? "Untitled",
-      description: article.excerpt || "",
-      type: "article",
-      publishedTime: article.created_at,
-      images: article.cover_image_url ? [article.cover_image_url] : [],
-    },
-  };
+    image: article.cover_image_url || undefined,
+  });
 }
 
-async function getArticleBySlug(slug: string): Promise<ArticleWithTags | null> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("content_items")
-    .select(`*, content_tags(tags(*))`)
-    .eq("slug", slug)
-    .eq("content_type", "article")
-    .eq("status", "published")
-    .single();
-
-  if (error) return null;
-
-  const transformedData = {
-    ...data,
-    tags: data.content_tags.map((item: any) => item.tags),
-  };
-  return transformedData;
-}
-
+// 2. Main Page Component
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const resolvedParams = await params;
-  const article = await getArticleBySlug(resolvedParams.slug);
+  const article = await getContentBySlug(resolvedParams.slug, "article");
 
   if (!article) notFound();
 
-  const topicTags = article.tags?.filter((t) => t.tag_type === "topic");
+  // Helper date format
+  const formattedDate = new Date(article.created_at).toLocaleDateString(
+    "en-US",
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
+
+  // 3. Schema Markup (Structured Data for Google)
+  const ArticleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.created_at,
+    dateModified: article.updated_at,
+    author: {
+      "@type": "Person",
+      name: "Riziyan", // Bisa diganti dynamic kalau ada field author
+    },
+    image: article.cover_image_url ? [article.cover_image_url] : [],
+  };
 
   return (
-    <main className="min-h-screen bg-dark text-light">
-      <article className="container mx-auto max-w-6xl px-4 py-12 md:py-20">
-        <div className="mb-8 text-sm text-light/60">
-          <Link href="/" className="hover:text-light transition-colors">
+    <main className="min-h-screen bg-background text-foreground">
+      {/* Inject Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ArticleSchema) }}
+      />
+
+      <article className="container mx-auto max-w-4xl px-4 py-12 md:py-20">
+        {/* Navigation Breadcrumb */}
+        <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/" className="hover:text-primary transition-colors">
             Home
           </Link>
-          <span className="mx-2">/</span>
-          <Link href="/articles" className="hover:text-light transition-colors">
+          <span>/</span>
+          <Link
+            href="/articles"
+            className="hover:text-primary transition-colors"
+          >
             Articles
           </Link>
-          <span className="mx-2">/</span>
-          <span className="text-light font-semibold">{article.title}</span>
-        </div>
-        <header className="text-center mb-12">
-          <h1 className="heading text-4xl md:text-6xl text-light mb-4">
+          <span>/</span>
+          <span className="text-foreground font-semibold truncate max-w-[200px]">
             {article.title}
-          </h1>
-          <div className="flex items-center justify-center gap-4 text-sm text-light/60">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-12" />
-              <time dateTime={article.created_at}>
-                {new Date(article.created_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
+          </span>
+        </div>
+
+        {/* Article Header */}
+        <header className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <Badge
+              variant="secondary"
+              className="px-3 py-1 text-xs uppercase tracking-widest"
+            >
+              Article
+            </Badge>
+            <div className="flex items-center text-xs text-muted-foreground">
+              <CalendarDays className="w-3 h-3 mr-1.5" />
+              <time dateTime={article.created_at}>{formattedDate}</time>
             </div>
           </div>
+
+          <h1 className="heading text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            {article.title}
+          </h1>
+
+          {article.excerpt && (
+            <p className="narrative text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {article.excerpt}
+            </p>
+          )}
         </header>
 
+        {/* Cover Image */}
         {article.cover_image_url && (
-          <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-12 border border-light/10">
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden mb-12 border border-border/50 bg-muted shadow-lg">
             <Image
               src={article.cover_image_url}
-              alt={article.title ?? "Article cover image"}
+              alt={article.title}
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 1200px) 100vw, 1200px"
             />
           </div>
         )}
 
-        <MarkdownRenderer content={article.content || ""} />
+        {/* Markdown Content */}
+        <div className="prose prose-lg prose-invert max-w-none mx-auto mb-16">
+          <MarkdownRenderer content={article.content} />
+        </div>
 
-        {topicTags && topicTags.length > 0 && (
-          <footer className="mt-16 pt-8 border-t border-light/10">
-            <h3 className="flex items-center gap-2 font-semibold mb-4 text-light/80">
-              <Hash className="w-5 h-5" />
-              Tags
-            </h3>
-            <div className="flex flex-wrap gap-3">
-              {topicTags.map((tag) => (
-                <Link
-                  href={`/tags/${tag.slug}`}
-                  key={tag.id}
-                  className="bg-secondary/50 text-light px-3 py-1 rounded-full text-sm hover:bg-secondary/70 transition-colors"
-                >
-                  {tag.name}
-                </Link>
-              ))}
+        <Separator className="my-12 bg-border/60" />
+
+        {/* Footer: Tags & Back Button */}
+        <footer className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          {/* Tags List */}
+          {article.tags && article.tags.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                <Hash className="w-4 h-4" /> Related Topics
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <Link href={`/tags/${tag.slug}`} key={tag.id}>
+                    <Badge
+                      variant="outline"
+                      className="hover:bg-accent/10 hover:text-accent hover:border-accent/30 transition-all cursor-pointer px-3 py-1"
+                    >
+                      {tag.name}
+                    </Badge>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </footer>
-        )}
+          )}
+
+          {/* Back Button */}
+          <Button
+            asChild
+            variant="ghost"
+            className="group text-muted-foreground hover:text-foreground"
+          >
+            <Link href="/articles">
+              <ArrowLeft className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
+              Back to All Articles
+            </Link>
+          </Button>
+        </footer>
       </article>
     </main>
   );
