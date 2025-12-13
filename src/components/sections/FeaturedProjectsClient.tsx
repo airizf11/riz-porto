@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FlaskConical } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -82,16 +82,31 @@ export const FeaturedProjectsClient = ({
           transition={{ delay: 0.4 }}
           className="mt-24 text-center"
         >
-          <Button
-            asChild
-            size="lg"
-            variant="secondary"
-            className="rounded-full px-8 h-12 text-base font-bold"
-          >
-            <Link href="/projects">
-              View All Projects <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* Tombol Existing: All Projects */}
+            <Button
+              asChild
+              size="lg"
+              variant="secondary"
+              className="rounded-full px-8 h-12 text-base font-bold w-full sm:w-auto shadow-lg shadow-primary/5"
+            >
+              <Link href="/projects">
+                View All Projects <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
+            </Button>
+
+            {/* Tombol Baru: The Lab / Experiments */}
+            <Button
+              asChild
+              size="lg"
+              variant="outline" // Pake outline biar secondary visual-nya
+              className="rounded-full px-8 h-12 text-base font-medium w-full sm:w-auto border-dashed border-border hover:border-accent transition-colors"
+            >
+              <Link href="/exp">
+                Visit The Lab <FlaskConical className="ml-2 w-4 h-4" />
+              </Link>
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>

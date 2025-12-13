@@ -14,8 +14,8 @@ import { getSiteSettings } from "@/services/content";
 export default async function HomePage() {
   const settings = await getSiteSettings();
 
-  const heroHeadline = settings.hero_headline || "Headline Coming Soon.";
-  const heroSubtitle = settings.hero_subtitle || "Subtitle Coming Soon.";
+  const heroHeadline = settings.hero_headline || "";
+  const heroSubtitle = settings.hero_subtitle || "";
   return (
     <main className="flex flex-col items-center justify-center">
       <HeroSection headline={heroHeadline} subtitle={heroSubtitle} />

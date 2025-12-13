@@ -54,8 +54,8 @@ export const AboutClient = ({
                   className="rounded-full pl-6 pr-6"
                   asChild
                 >
-                  <Link href="/exp">
-                    See My Experiments <ArrowUpRight className="ml-2 w-4 h-4" />
+                  <Link href="/resume">
+                    View Full Resume <ArrowUpRight className="ml-2 w-4 h-4" />
                   </Link>
                 </Button>
               </div>

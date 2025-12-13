@@ -29,7 +29,8 @@ const PersonSchema = {
     "https://github.com/airizf11",
     "https://www.youtube.com/rizyanchannel",
     "https://instagram.com/rizyan.people",
-    "https://tiktok.com/@akuriziyan",
+    "https://tiktok.com/@rizyan.gt",
+    "https://blog.riziyan.my.id",
   ],
 };
 

@@ -159,7 +159,7 @@ export const ProjectCard = ({
                 asChild
                 variant="ghost"
                 size="icon"
-                className="rounded-full text-muted-foreground hover:text-foreground"
+                className="rounded-full text-muted-foreground"
               >
                 <a
                   href={project.repo_url}
