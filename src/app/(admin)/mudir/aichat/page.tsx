@@ -15,7 +15,7 @@ async function getAiManagementData() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  // Di masa depan, kamu bisa fetch statistik lain di sini jika perlu
+  // can fetch statistik lain
 
   return { manualKnowledge: manualKnowledge ?? [] };
 }

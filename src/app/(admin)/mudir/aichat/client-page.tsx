@@ -1,16 +1,17 @@
 // src/app/(admin)/mudir/aichat/client-page.tsx
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import {
   useState,
-  useTransition,
-  FormEvent,
+  useTransition, // FormEvent,
   useRef,
   useActionState,
 } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import {
+  // useFormState,
+  useFormStatus,
+} from "react-dom";
 import {
   addManualKnowledge,
   deleteManualKnowledge,

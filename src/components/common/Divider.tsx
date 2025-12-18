@@ -1,4 +1,4 @@
-// src/components/Divider.tsx
+// src/components/common/Divider.tsx
 "use client";
 
 import { motion } from "framer-motion";

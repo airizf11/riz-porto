@@ -1,4 +1,4 @@
-// src/app/(admin)/mudir/page.tsx
+// src/app/(admin)/mudir/projects/page.tsx
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Edit, PlusCircle } from "lucide-react";

@@ -1,12 +1,10 @@
 // src/app/(admin)/mudir/page.tsx
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import {
   ArrowUpRight,
-  GitMerge,
-  MessageSquare,
+  GitMerge, // MessageSquare,
   PenSquare,
   Quote,
 } from "lucide-react";

@@ -1,4 +1,4 @@
-// src/app/(admin)/mudir/settings/page.tsx
+// src/app/(admin)/mudir/settings/client-page.tsx
 "use client";
 
 import { useActionState } from "react";
