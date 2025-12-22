@@ -60,16 +60,16 @@ export const RESUME_DATA: ResumeData = {
   basics: {
     name: "Riziyan - Rizqi Febrian Maulana",
     initials: "RZ",
-    label: "Full Stack Engineer & Content Creator",
+    label: "Technologist & Educator",
     email: "rizian.business99@gmail.com",
     location: "Surabaya, Indonesia",
     website: "https://blog.riziyan.my.id",
 
     headline:
-      "Building accessible, pixel-perfect, and performant web experiences.",
+      "I build digital products and explain technology with a focus on clarity, accessibility, and real-world use.",
 
     summary:
-      "I am a self-taught developer with a deep passion for the React ecosystem. My journey started with curiosity and evolved into building production-ready applications. I combine technical expertise in Next.js and TypeScript with a creative flair for content creation, ensuring that what I build not only functions perfectly but also tells a compelling story.",
+      "I am a technologist and educator who builds digital products and helps people understand technology in practical ways. My work sits at the intersection of software development, education, and content creation, with a strong focus on clarity, accessibility, and real-world use. I care about building things that are not only technically sound, but also meaningful and usable for real people.",
 
     // SIMULASI PDF BELUM READY:
     // Biarkan string kosong ("") atau null.
@@ -148,6 +148,7 @@ export const RESUME_DATA: ResumeData = {
       end: "Jul 2021",
       location: "YouTube",
       location_type: "Remote",
+      link: "https://youtube.com/rizyanchannel",
       description: [
         "Created and managed a YouTube channel, handling content planning, production, and publishing.",
         "Edited video content and optimized titles, descriptions, and thumbnails for audience engagement.",
